@@ -33,7 +33,7 @@
 
         // Authorization scopes required by the API; multiple scopes can be
         // included, separated by spaces.
-        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
         let tokenClient;
         let gapiInited = false;
@@ -158,6 +158,33 @@
                     const result = response.result;
                     const numRows = result.values ? result.values.length : 0;
                     console.log(`${numRows} rows retrieved.`);
+                    if (callback) callback(response);
+                });
+            } catch (err) {
+                document.getElementById('content').innerText = err.message;
+                return;
+            }
+        }
+
+        function updateValues(spreadsheetId, range, _values, callback) {
+            let values = [
+                [
+                    // Cell values ...
+                ],
+                // Additional rows ...
+            ];
+            values = _values;
+            const body = {
+                values: values,
+            };
+            try {
+                gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: spreadsheetId,
+                    range: range,
+                    resource: body,
+                }).then((response) => {
+                    const result = response.result;
+                    console.log(`${result.updatedCells} cells updated.`);
                     if (callback) callback(response);
                 });
             } catch (err) {
