@@ -1,14 +1,24 @@
 import { useState } from "react";
+import "./Home.scss";
+import { MdOutlineLocalGroceryStore } from "react-icons/md";
+import { GiWeightLiftingUp } from "react-icons/gi";
+import { VscChecklist } from "react-icons/vsc";
 
 const gettt = () => {
-	fetch(`https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Sheet1!A1:D5`, {
-		method: "GET",
-	});
+	fetch(`https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Sheet1!A1:A3`, {
+		method: "GET"
+	})
+		.then((response) => {
+			return response.json();
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 };
 
 const body = {
 	range: `${import.meta.env.VITE_SHEET_NAME}!A1:A3`,
-	values: [["Hello"], ["testing"], ["goodbye"]],
+	values: [["Hello"], ["testing"], ["goodbye"]]
 };
 
 const up = (spreadsheetId, range, _values, callback) => {
@@ -23,12 +33,12 @@ const up = (spreadsheetId, range, _values, callback) => {
 	// 	values: values,
 	// };
 	try {
-		gapi.client.sheets.spreadsheets.values
+		gapi.client.spreadsheets.values
 			.update({
 				spreadsheetId: spreadsheetId,
 				range: range,
 				valueInputOption: "RAW",
-				resource: body,
+				resource: body
 			})
 			.then((response) => {
 				const result = response.result;
@@ -58,10 +68,54 @@ const up = (spreadsheetId, range, _values, callback) => {
 // 		});
 // };
 
-export const Home = () => {
+export const Home = (props) => {
+	const tiles = [
+		{
+			name: "exercise",
+			icon: <GiWeightLiftingUp size={100} />
+		},
+		{
+			name: "checklist",
+			icon: <VscChecklist size={100} />
+		},
+		{
+			name: "groceries",
+			icon: <MdOutlineLocalGroceryStore size={100} />
+		},
+		{
+			name: "wasteCollection",
+			icon: <MdOutlineLocalGroceryStore size={100} />
+		},
+		{
+			name: "exercise",
+			icon: <MdOutlineLocalGroceryStore size={100} />
+		}
+	];
+
+	const getTileButtons = () => {
+		// for (let i = 0; i < tiles.length; i++) {
+		//     const element = tiles[i];
+
+		// }
+		return (
+			<div id="tile-buttons">
+				{tiles.map((elem) => {
+					return (
+						<div className="tile-button" onClick={() => props.updateCurrentPage(elem.name)}>
+							<div className="tile-icon">{elem.icon}</div>
+							<div className="tile-text">{elem.name.toUpperCase()}</div>
+						</div>
+					);
+				})}
+			</div>
+		);
+	};
+
 	return (
 		<>
-			<form>
+			{getTileButtons()}
+
+			{/* <form>
 				<div>
 					<input
 						type="checkbox"
@@ -89,13 +143,14 @@ export const Home = () => {
 			</form>
 			<button
 				onClick={() =>
-					getValues(import.meta.env.VITE_SHEET_ID, `${import.meta.env.VITE_SHEET_NAME}!A1:B2`, (data) =>
-						console.log(data)
-					)
+					// gettt(import.meta.env.VITE_SHEET_ID, `${import.meta.env.VITE_SHEET_NAME}!A1:B2`, (data) =>
+					// 	console.log(data)
+					// )
+					gettt()
 				}
 			>
 				Get
-			</button>
+			</button> */}
 		</>
 	);
 };
