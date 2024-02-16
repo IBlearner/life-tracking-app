@@ -1,54 +1,54 @@
-import { useState } from "react";
 import "./Home.scss";
 import { MdOutlineLocalGroceryStore } from "react-icons/md";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { VscChecklist } from "react-icons/vsc";
+import { BsTrash3 } from "react-icons/bs";
 
-const gettt = () => {
-	fetch(`https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Sheet1!A1:A3`, {
-		method: "GET"
-	})
-		.then((response) => {
-			return response.json();
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-};
+// const gettt = () => {
+// 	fetch(`https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Sheet1!A1:A3`, {
+// 		method: "GET"
+// 	})
+// 		.then((response) => {
+// 			return response.json();
+// 		})
+// 		.catch((error) => {
+// 			console.log(error);
+// 		});
+// };
 
-const body = {
-	range: `${import.meta.env.VITE_SHEET_NAME}!A1:A3`,
-	values: [["Hello"], ["testing"], ["goodbye"]]
-};
+// const body = {
+// 	range: `${import.meta.env.VITE_SHEET_NAME}!A1:A3`,
+// 	values: [["Hello"], ["testing"], ["goodbye"]]
+// };
 
-const up = (spreadsheetId, range, _values, callback) => {
-	// let values = [
-	// 	[
-	// 		// Cell values ...
-	// 	],
-	// 	// Additional rows ...
-	// ];
-	// values = _values;
-	// const body = {
-	// 	values: values,
-	// };
-	try {
-		gapi.client.spreadsheets.values
-			.update({
-				spreadsheetId: spreadsheetId,
-				range: range,
-				valueInputOption: "RAW",
-				resource: body
-			})
-			.then((response) => {
-				const result = response.result;
-				console.log(`${result.updatedCells} cells updated.`);
-				if (callback) callback(response);
-			});
-	} catch (err) {
-		return console.log(err);
-	}
-};
+// const up = (spreadsheetId, range, _values, callback) => {
+// 	// let values = [
+// 	// 	[
+// 	// 		// Cell values ...
+// 	// 	],
+// 	// 	// Additional rows ...
+// 	// ];
+// 	// values = _values;
+// 	// const body = {
+// 	// 	values: values,
+// 	// };
+// 	try {
+// 		gapi.client.spreadsheets.values
+// 			.update({
+// 				spreadsheetId: spreadsheetId,
+// 				range: range,
+// 				valueInputOption: "RAW",
+// 				resource: body
+// 			})
+// 			.then((response) => {
+// 				const result = response.result;
+// 				console.log(`${result.updatedCells} cells updated.`);
+// 				if (callback) callback(response);
+// 			});
+// 	} catch (err) {
+// 		return console.log(err);
+// 	}
+// };
 
 // const updateValues = () => {
 // 	const body = {
@@ -68,7 +68,7 @@ const up = (spreadsheetId, range, _values, callback) => {
 // 		});
 // };
 
-export const Home = (props) => {
+export const Home = ({ updateCurrentPage }: { updateCurrentPage: (e: string) => void }) => {
 	const tiles = [
 		{
 			name: "exercise",
@@ -84,7 +84,7 @@ export const Home = (props) => {
 		},
 		{
 			name: "wasteCollection",
-			icon: <MdOutlineLocalGroceryStore size={100} />
+			icon: <BsTrash3 size={100} />
 		},
 		{
 			name: "exercise",
@@ -93,15 +93,11 @@ export const Home = (props) => {
 	];
 
 	const getTileButtons = () => {
-		// for (let i = 0; i < tiles.length; i++) {
-		//     const element = tiles[i];
-
-		// }
 		return (
 			<div id="tile-buttons">
 				{tiles.map((elem) => {
 					return (
-						<div className="tile-button" onClick={() => props.updateCurrentPage(elem.name)}>
+						<div className="tile-button" onClick={() => updateCurrentPage(elem.name)}>
 							<div className="tile-icon">{elem.icon}</div>
 							<div className="tile-text">{elem.name.toUpperCase()}</div>
 						</div>

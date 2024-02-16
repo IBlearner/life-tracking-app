@@ -8,12 +8,7 @@ import { Exercise } from "./pages/Exercise";
 import { WasteCollection } from "./pages/WasteCollection";
 
 function App() {
-	const [count, setCount] = useState(0);
 	const [currentPage, setCurrentPage] = useState<string>("home");
-
-	const test = () => {
-		console.log("woo");
-	};
 
 	const getCurrentPage = () => {
 		switch (currentPage) {
