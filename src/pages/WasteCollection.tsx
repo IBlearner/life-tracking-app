@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const WasteCollection = () => {
-	const wasteCollectionDataFile = "public/waste_collection_data_clean.json";
+	const wasteCollectionDataFile = "waste_collection_data_clean.json";
 	const [wasteCollectionData, setWasteCollectionData] = useState([]);
 	const [selectedSuburb, setSelectedSuburb] = useState<string>("");
 	const [selectedDay, setSelectedDay] = useState<string>("");
