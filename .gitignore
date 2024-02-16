@@ -26,4 +26,4 @@ dist-ssr
 .env
 
 data/*
-!/data/waste_collection_data_clean.json
+#!/data/waste_collection_data_clean.json
