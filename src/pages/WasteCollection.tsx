@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { compareAsc, format } from "date-fns";
 
 export const WasteCollection = () => {
 	const wasteCollectionDataFile = "waste_collection_data_clean.json";
@@ -6,6 +7,7 @@ export const WasteCollection = () => {
 	const [selectedSuburb, setSelectedSuburb] = useState<string>("");
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedZone, setSelectedZone] = useState<string>("");
+	const timeAnchor = new Date(2024, 2, 16);
 
 	useEffect(() => {
 		fetch(wasteCollectionDataFile, {
@@ -15,6 +17,8 @@ export const WasteCollection = () => {
 			.then((data) => {
 				setWasteCollectionData(data);
 			});
+
+		console.log(Date.now() - timeAnchor);
 	}, []);
 
 	const getSuburbOptions = () => {
