@@ -1,0 +1,106 @@
+#bin-colour-group {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+
+	padding: 0 40px 60px 40px;
+}
+
+.bin-colour {
+	background-color: black;
+	border: 1px solid orange;
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+
+	&.red {
+		background-color: rgb(186, 0, 0);
+	}
+
+	&.black {
+		background-color: black;
+	}
+
+	&.yellow {
+		background-color: rgb(240, 240, 54);
+	}
+
+	&.green {
+		background-color: rgb(0, 73, 0);
+	}
+}
+
+.preference-not-saved {
+	opacity: 1;
+	animation-name: preference-unsaved-anim;
+	animation-duration: 0.5s;
+}
+
+.preference-saved {
+	opacity: 0;
+	animation-name: preference-saved-anim;
+	animation-duration: 0.5s;
+}
+
+@keyframes preference-saved-anim {
+	0% {
+		opacity: 1;
+		z-index: 3;
+	}
+	100% {
+		opacity: 0;
+		z-index: 0;
+	}
+}
+
+@keyframes preference-unsaved-anim {
+	0% {
+		opacity: 0;
+		z-index: 0;
+	}
+	100% {
+		opacity: 1;
+		z-index: 3;
+	}
+}
+
+#save-preference {
+	position: relative;
+}
+
+#checkmark {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 3px solid rgb(0, 255, 4);
+	border-radius: 100%;
+	padding: 12px;
+}
+
+.checkmark-shown {
+	opacity: 1;
+	z-index: 1;
+
+	animation-name: checkmark-appear;
+	animation-duration: 1s;
+}
+
+.checkmark-not-shown {
+	opacity: 0;
+	z-index: -9999;
+
+	animation-duration: 1s;
+}
+
+@keyframes checkmark-appear {
+	0% {
+		opacity: 0;
+		z-index: -9999;
+	}
+	100% {
+		opacity: 1;
+		z-index: 1;
+	}
+}
