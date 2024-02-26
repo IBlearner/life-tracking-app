@@ -109,6 +109,10 @@ export const Home = ({ updateCurrentPage }: { updateCurrentPage: (e: string) => 
 
 	return (
 		<>
+			<h1 id="home-title">Life Tracker</h1>
+			<p>
+				<i>Because everyone needs a little help sometimes</i>
+			</p>
 			{getTileButtons()}
 
 			{/* <form>

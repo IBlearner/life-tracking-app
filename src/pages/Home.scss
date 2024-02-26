@@ -4,9 +4,15 @@
 	justify-content: space-around;
 	align-items: center;
 }
+
 .tile-button {
 	flex-grow: 0;
 	max-width: 100px;
 
 	padding: 10px 25px;
+}
+
+#home-title {
+	margin-top: 0;
+	margin-bottom: 10px;
 }
