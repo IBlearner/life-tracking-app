@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import "./WasteCollection.scss";
 import { IoCheckmark } from "react-icons/io5";
+import { BsTrash3 } from "react-icons/bs";
 
 export const WasteCollection = () => {
 	const wasteCollectionDataFile = "waste_collection_data_clean.json";
@@ -99,9 +100,9 @@ export const WasteCollection = () => {
 
 	return (
 		<div>
+			<BsTrash3 size={80} />
 			{selectedSuburb ? <p>Showing for {selectedSuburb}</p> : <p>Select a suburb below</p>}
-			<label htmlFor="suburb-select">Choose a suburb:</label>
-
+			<label htmlFor="suburb-select">Choose a suburb: </label>
 			<select
 				name="suburbs"
 				id="suburb-select"
@@ -114,7 +115,7 @@ export const WasteCollection = () => {
 					setPreferenceSaved(false);
 				}}
 			>
-				<option value="choose-option">--Please choose an option--</option>
+				<option value="choose-option">--Choose an option--</option>
 				{getSuburbOptions()}
 			</select>
 			{selectedSuburb ? getSuburbData() : null}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { IoHome } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 
 // Page imports
 import { Home } from "./pages/Home";
@@ -23,25 +24,25 @@ function App() {
 		}
 	};
 
-	const getHomeButton = () => {
+	const getToolbar = () => {
 		return (
-			<div onClick={() => setCurrentPage("home")}>
-				<IoHome size={80} />
+			<div id="toolbar">
+				<IoHome id="home-button-icon" size={30} onClick={() => setCurrentPage("home")} />
+				<IoMenu id="menu-button-icon" size={30} onClick={() => console.log("opening menu..")} />
 			</div>
 		);
 	};
 
 	const updateCurrentPage = (page: string) => {
 		setCurrentPage(page);
-		console.log("dfsfdsf");
 	};
 
 	return (
-		<>
-			{currentPage !== "home" ? getHomeButton() : null}
+		<div id="app-page">
+			{currentPage !== "home" ? getToolbar() : null}
 			{/* <button onClick={() => handleAuthClick()}>Authorize</button> */}
 			{getCurrentPage()}
-		</>
+		</div>
 	);
 }
 
