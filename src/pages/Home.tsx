@@ -1,7 +1,7 @@
 import "./Home.scss";
 import { MdOutlineLocalGroceryStore } from "react-icons/md";
 import { GiWeightLiftingUp } from "react-icons/gi";
-import { VscChecklist } from "react-icons/vsc";
+import { CiViewList } from "react-icons/ci";
 import { BsTrash3 } from "react-icons/bs";
 
 // const gettt = () => {
@@ -76,7 +76,7 @@ export const Home = ({ updateCurrentPage }: { updateCurrentPage: (e: string) => 
 		},
 		{
 			name: "checklist",
-			icon: <VscChecklist size={100} />
+			icon: <CiViewList size={100} />
 		},
 		{
 			name: "groceries",

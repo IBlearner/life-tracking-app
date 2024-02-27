@@ -7,6 +7,7 @@ import { IoMenu } from "react-icons/io5";
 import { Home } from "./pages/Home";
 import { Exercise } from "./pages/Exercise";
 import { WasteCollection } from "./pages/WasteCollection";
+import { Checklist } from "./pages/Checklist";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
@@ -17,6 +18,8 @@ function App() {
 				return <Home updateCurrentPage={updateCurrentPage} />;
 			case "exercise":
 				return <Exercise />;
+			case "checklist":
+				return <Checklist />;
 			case "wasteCollection":
 				return <WasteCollection />;
 			default:
