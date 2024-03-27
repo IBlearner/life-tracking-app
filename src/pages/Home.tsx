@@ -3,6 +3,7 @@ import { MdOutlineLocalGroceryStore } from "react-icons/md";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { CiViewList } from "react-icons/ci";
 import { BsTrash3 } from "react-icons/bs";
+import { IoScaleOutline } from "react-icons/io5";
 
 // const gettt = () => {
 // 	fetch(`https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Sheet1!A1:A3`, {
@@ -87,8 +88,8 @@ export const Home = ({ updateCurrentPage }: { updateCurrentPage: (e: string) => 
 			icon: <BsTrash3 size={100} />
 		},
 		{
-			name: "exercise",
-			icon: <MdOutlineLocalGroceryStore size={100} />
+			name: "weight",
+			icon: <IoScaleOutline size={100} />
 		}
 	];
 

@@ -8,6 +8,7 @@ import { Home } from "./pages/Home";
 import { Exercise } from "./pages/Exercise";
 import { WasteCollection } from "./pages/WasteCollection";
 import { Checklist } from "./pages/Checklist";
+import { Weight } from "./pages/Weight";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
@@ -22,6 +23,8 @@ function App() {
 				return <Checklist />;
 			case "wasteCollection":
 				return <WasteCollection />;
+			case "weight":
+				return <Weight />;
 			default:
 				break;
 		}
