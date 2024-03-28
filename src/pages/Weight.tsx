@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { getDay, getMonth, getYear } from "date-fns";
 import "./Weight.scss";
+
+// Icon imports
 import { IoScaleOutline } from "react-icons/io5";
+import { FaLongArrowAltRight } from "react-icons/fa";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 
 interface IMonths {
 	name: string;
@@ -58,23 +63,33 @@ const months: IMonths[] = [
 ];
 
 export const Weight = () => {
-	const [curDay, setCurDay] = useState<number>(6);
-	const [curMonth, setCurMonth] = useState<number>(6);
-	const [curYear, setCurYear] = useState<number>(2024);
+	// Values to specify both the day the user selects, as well as the month/year the user currently sees
+	const [chosenDay, setChosenDay] = useState<number>(getDay(Date.now()));
+	const [chosenMonth, setChosenMonth] = useState<number>(getMonth(Date.now()));
+	const [chosenYear, setChosenYear] = useState<number>(getYear(Date.now()));
+	const [viewingMonth, setViewingMonth] = useState<number>(getMonth(Date.now()));
+	const [viewingYear, setViewingYear] = useState<number>(getYear(Date.now()));
+	// TODO: WE NEED TO DIFFERENET THE VIEWING AND CHOSEN VALUES
 	const [curDate, setCurDate] = useState<string>(Date.now().toString());
 	const [chosenDate, setChosenDate] = useState<string>(Date.now().toString());
+
+	const calenderDayRef = useRef<HTMLElement | null>(null);
 
 	const getCalender = () => {
 		return (
 			<div>
 				<div id="calender-toolbar">
-					<div onClick={() => onCalenderMonthChange(false)}>BACK</div>
-					<div>
-						{months[curMonth - 1].name} + {curYear}
+					<div className="calender-arrow" onClick={() => onCalenderMonthChange(false)}>
+						<FaLongArrowAltLeft size={30} />
 					</div>
-					<div onClick={() => onCalenderMonthChange(true)}>FORWARD</div>
+					<div>
+						{months[viewingMonth - 1].name.toUpperCase()} {viewingYear}
+					</div>
+					<div className="calender-arrow" onClick={() => onCalenderMonthChange(true)}>
+						<FaLongArrowAltRight size={30} />
+					</div>
 				</div>
-				<div id="calender-days-container">{getCalenderDays(curMonth)}</div>
+				<div id="calender-days-container">{getCalenderDays(viewingMonth)}</div>
 			</div>
 		);
 	};
@@ -84,12 +99,12 @@ export const Weight = () => {
 		const monthPos = month - 1;
 
 		let arr = [];
-		for (let i = 1; i < months[monthPos].days; i++) {
+		for (let i = 1; i < months[monthPos].days + 1; i++) {
 			arr.push(
 				<div
 					className="calender-day"
-					id={`calender-${i}-${months[monthPos]}-${curYear}`}
-					onClick={() => onCalenderDayClick(i, month, curYear)}
+					id={`calender-${i}-${month}-${chosenYear}`}
+					onClick={(e) => onCalenderDayClick(i, month, viewingYear, e.target as HTMLElement)}
 				>
 					{i < 10 ? "0" + i : i}
 				</div>
@@ -101,40 +116,50 @@ export const Weight = () => {
 	const onCalenderMonthChange = (forwards: boolean) => {
 		// Implementing bounds for the month changer
 		if (forwards) {
-			console.log(curMonth);
-			if (curMonth >= 12) {
-				setCurMonth(1);
-				setCurYear(curYear + 1);
+			if (viewingMonth >= 12) {
+				setViewingMonth(1);
+				setViewingYear(viewingYear + 1);
 			} else {
-				setCurMonth(curMonth + 1);
+				setViewingMonth(viewingMonth + 1);
 			}
 		} else {
-			if (curMonth <= 1) {
-				setCurMonth(12);
-				setCurYear(curYear - 1);
+			if (viewingMonth <= 1) {
+				setViewingMonth(12);
+				setViewingYear(viewingYear - 1);
 			} else {
-				setCurMonth(curMonth - 1);
+				setViewingMonth(viewingMonth - 1);
 			}
 		}
 	};
 
-	const onCalenderDayClick = (day: number, month: number, year: number) => {
-		setCurDay(day);
-		setCurMonth(month);
-		setCurYear(year);
+	const onCalenderDayClick = (day: number, month: number, year: number, elemRef: HTMLElement) => {
+		// Updating the "chosen" values
+		setChosenDay(day);
+		setChosenMonth(month);
+		setChosenYear(year);
+
+		// We need to first deselect the current day ref
+		// TODO: On init, we want the day ref to be todays date.
+		if (calenderDayRef.current) {
+			calenderDayRef.current.classList.remove("calender-selected");
+		}
+		// Then update to the new day ref
+		calenderDayRef.current = elemRef;
+		calenderDayRef.current.classList.add("calender-selected");
+
+		console.log(calenderDayRef.current);
 	};
 
 	return (
 		<div id="weight-container">
 			<IoScaleOutline size={80} />
 			{getCalender()}
-			<p>{curDate}</p>
-			<p>{chosenDate}</p>
-			<p>{curDay}</p>
-			<p>{curMonth}</p>
-			<p>{curYear}</p>
-
-			<p>select a day and input it</p>
+			{/* <p>{curDate}</p> */}
+			{/* <p>{chosenDate}</p> */}
+			<p>{chosenDay}</p>
+			<p>{chosenMonth}</p>
+			<p>{chosenYear}</p>
+			<input />
 		</div>
 	);
 };
