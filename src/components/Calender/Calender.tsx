@@ -109,16 +109,17 @@ export const Calender = (props) => {
 
 	const onCalenderMonthChange = (forwards: boolean) => {
 		// Implementing bounds for the month changer
+		// Note: getMonth will give Jan = 0, Dec = 11 so we must have bounds between 0-11
 		if (forwards) {
-			if (viewingMonth >= 12) {
-				setViewingMonth(1);
+			if (viewingMonth >= 11) {
+				setViewingMonth(0);
 				setViewingYear(viewingYear + 1);
 			} else {
 				setViewingMonth(viewingMonth + 1);
 			}
 		} else {
-			if (viewingMonth <= 1) {
-				setViewingMonth(12);
+			if (viewingMonth <= 0) {
+				setViewingMonth(11);
 				setViewingYear(viewingYear - 1);
 			} else {
 				setViewingMonth(viewingMonth - 1);
