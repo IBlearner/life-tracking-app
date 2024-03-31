@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { getDate, getMonth, getYear, format } from "date-fns";
+import { useState, useEffect } from "react";
+import { getDate, getMonth, getYear } from "date-fns";
 import "./Calender.scss";
 
 // Icon imports

@@ -72,6 +72,7 @@ export const Checklist = () => {
 			completedDate: data[index].completedDate
 		};
 
+		console.log(e);
 		console.log([...data]);
 		const newArray = [...data].splice(index, 0, newItem);
 		console.log(newArray);
