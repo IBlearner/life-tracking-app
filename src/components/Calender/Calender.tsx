@@ -77,7 +77,7 @@ export const Calender = (props) => {
 
 	const getCalenderDays = () => {
 		let arr = [];
-		for (let i = 1; i < months[viewingMonth].days + 1; i++) {
+		for (let i = 1; i < months[viewingMonth].days + 1 + (isLeapYear() ? 1 : 0); i++) {
 			arr.push(
 				<div
 					className={`calender-day`}
@@ -93,7 +93,7 @@ export const Calender = (props) => {
 
 	const getCalenderDaysWithHighlightedDay = () => {
 		let arr = [];
-		for (let i = 1; i < months[viewingMonth].days + 1; i++) {
+		for (let i = 1; i < months[viewingMonth].days + 1 + (isLeapYear() ? 1 : 0); i++) {
 			arr.push(
 				<div
 					className={`calender-day ${chosenDay === i ? "calender-selected" : ""}`}
@@ -137,6 +137,10 @@ export const Calender = (props) => {
 
 	const shouldHaveHighlightedDay = () => {
 		return viewingMonth === chosenMonth && viewingYear === chosenYear;
+	};
+
+	const isLeapYear = () => {
+		return viewingMonth === 1 && viewingYear % 4 === 0;
 	};
 
 	return (
