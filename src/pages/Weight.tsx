@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { getDay, getMonth, getYear } from "date-fns";
+import { Calender } from "../components/Calender/Calender";
 import "./Weight.scss";
 
 // Icon imports
@@ -150,10 +151,14 @@ export const Weight = () => {
 		console.log(calenderDayRef.current);
 	};
 
+	const updateSelectedDay = (chosenDate: string) => {
+		console.log(chosenDate);
+	};
+
 	return (
 		<div id="weight-container">
 			<IoScaleOutline size={80} />
-			{getCalender()}
+			<Calender onDaySelect={updateSelectedDay} />
 			{/* <p>{curDate}</p> */}
 			{/* <p>{chosenDate}</p> */}
 			<p>{chosenDay}</p>
