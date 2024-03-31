@@ -62,12 +62,12 @@ const months: IMonths[] = [
 	}
 ];
 
-export const Calender = (props) => {
+export const Calender = (props: { onDaySelect: (e: Date) => void }) => {
 	// Values to specify both the day the user selects, as well as the month/year the user currently sees
 	const [chosenDay, setChosenDay] = useState<number>(getDate(Date.now()));
 	const [chosenMonth, setChosenMonth] = useState<number>(getMonth(Date.now()));
 	const [chosenYear, setChosenYear] = useState<number>(getYear(Date.now()));
-	const [chosenDate, setChosenDate] = useState<string>(format(Date.now(), "dd/MM/yyyy")); // On init it should be today's date
+	const [chosenDate, setChosenDate] = useState<Date>(new Date(Date.now())); // On init it should be today's date
 	const [viewingMonth, setViewingMonth] = useState<number>(getMonth(Date.now()));
 	const [viewingYear, setViewingYear] = useState<number>(getYear(Date.now()));
 
@@ -82,7 +82,7 @@ export const Calender = (props) => {
 				<div
 					className={`calender-day`}
 					id={`calender-${i}-${viewingMonth}-${chosenYear}`}
-					onClick={(e) => onCalenderDayClick(i, viewingMonth, viewingYear)}
+					onClick={() => onCalenderDayClick(i, viewingMonth, viewingYear)}
 				>
 					{i < 10 ? "0" + i : i}
 				</div>
@@ -98,12 +98,13 @@ export const Calender = (props) => {
 				<div
 					className={`calender-day ${chosenDay === i ? "calender-selected" : ""}`}
 					id={`calender-${i}-${viewingMonth}-${chosenYear}`}
-					onClick={(e) => onCalenderDayClick(i, viewingMonth, viewingYear)}
+					onClick={() => onCalenderDayClick(i, viewingMonth, viewingYear)}
 				>
 					{i < 10 ? "0" + i : i}
 				</div>
 			);
 		}
+		arr.push(<div className={`empty-calender-day`}>{9}</div>);
 		return arr;
 	};
 
@@ -132,7 +133,7 @@ export const Calender = (props) => {
 		setChosenDay(day);
 		setChosenMonth(month);
 		setChosenYear(year);
-		setChosenDate(`${day}/${month}/${year}`);
+		setChosenDate(new Date(year, month, day));
 	};
 
 	const shouldHaveHighlightedDay = () => {
