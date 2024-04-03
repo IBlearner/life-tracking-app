@@ -1,68 +1,13 @@
 import { useState, useEffect } from "react";
 import { getDate, getMonth, getYear } from "date-fns";
+import { months } from "../../Constants";
 import "./Calender.scss";
 
 // Icon imports
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 
-interface IMonths {
-	name: string;
-	days: number;
-}
-
-const months: IMonths[] = [
-	{
-		name: "january",
-		days: 31
-	},
-	{
-		name: "february",
-		days: 28
-	},
-	{
-		name: "march",
-		days: 31
-	},
-	{
-		name: "april",
-		days: 30
-	},
-	{
-		name: "may",
-		days: 31
-	},
-	{
-		name: "june",
-		days: 30
-	},
-	{
-		name: "july",
-		days: 31
-	},
-	{
-		name: "august",
-		days: 31
-	},
-	{
-		name: "september",
-		days: 30
-	},
-	{
-		name: "october",
-		days: 31
-	},
-	{
-		name: "november",
-		days: 30
-	},
-	{
-		name: "december",
-		days: 31
-	}
-];
-
-export const Calender = (props: { onDaySelect: (e: Date) => void }) => {
+export const Calender = (props: { onDaySelect: (e: Date) => void; onViewingMonthChange: (e: number) => void }) => {
 	// Values to specify both the day the user selects, as well as the month/year the user currently sees
 	const [chosenDay, setChosenDay] = useState<number>(getDate(Date.now()));
 	const [chosenMonth, setChosenMonth] = useState<number>(getMonth(Date.now()));
@@ -74,6 +19,11 @@ export const Calender = (props: { onDaySelect: (e: Date) => void }) => {
 	useEffect(() => {
 		props.onDaySelect(chosenDate);
 	}, [chosenDate]);
+
+	// On init, and when the viewing month changes, we want to emit the current viewing month
+	useEffect(() => {
+		props.onViewingMonthChange(viewingMonth);
+	}, [viewingMonth]);
 
 	const getCalenderDays = () => {
 		let arr = [];
