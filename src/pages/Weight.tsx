@@ -119,6 +119,9 @@ export const Weight = (props: { userId: number }) => {
 				// We want to refresh the user's data after successful submit
 				if (data.status === "OK" && data.statusCode === 200) {
 					getData();
+
+					// Clear the input field
+					setWeight(0);
 				}
 			});
 
@@ -178,9 +181,9 @@ export const Weight = (props: { userId: number }) => {
 				onViewingYearChange={updateViewingYear}
 			/>
 			<label htmlFor="weight-input">Weight:</label>
-			<input id="weight-input" onChange={(e) => onWeightChange(e)} />
+			<input id="weight-input" onChange={(e) => onWeightChange(e)} value={weight || ""} />
 			<label htmlFor="notes-input">Notes:</label>
-			<input id="notes-input" onChange={(e) => onNoteChange(e)} />
+			<input id="notes-input" onChange={(e) => onNoteChange(e)} value={notes} />
 			<button onClick={() => onSubmit()}>SUBMIT</button>
 			<p>{notes}</p>
 			{getWeightGraph()}
