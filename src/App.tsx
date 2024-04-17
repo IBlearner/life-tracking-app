@@ -12,6 +12,7 @@ import { Weight } from "./pages/Weight";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
+	const [userId, setUserId] = useState(123);
 
 	const getCurrentPage = () => {
 		switch (currentPage) {
@@ -24,7 +25,7 @@ function App() {
 			case "wasteCollection":
 				return <WasteCollection />;
 			case "weight":
-				return <Weight />;
+				return <Weight userId={userId} />;
 			default:
 				break;
 		}

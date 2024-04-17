@@ -1,3 +1,6 @@
+export const appsScriptURL: string =
+	"https://script.google.com/macros/s/AKfycbzR2BbU2UzIwbBluiQWKLxLohsSNYMPXZqWus0vRmb_7KaZ7p5g_5mW5jEa_hgKrywzng/exec";
+
 export interface IMonths {
 	name: string;
 	days: number;
@@ -53,3 +56,10 @@ export const months: IMonths[] = [
 		days: 31
 	}
 ];
+
+export interface IDateWeightItem {
+	id: number;
+	date: Date;
+	weight: number;
+	notes: string;
+}

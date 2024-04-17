@@ -7,7 +7,11 @@ import "./Calender.scss";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 
-export const Calender = (props: { onDaySelect: (e: Date) => void; onViewingMonthChange: (e: number) => void }) => {
+export const Calender = (props: {
+	onDaySelect: (e: Date) => void;
+	onViewingMonthChange: (e: number) => void;
+	onViewingYearChange: (e: number) => void;
+}) => {
 	// Values to specify both the day the user selects, as well as the month/year the user currently sees
 	const [chosenDay, setChosenDay] = useState<number>(getDate(Date.now()));
 	const [chosenMonth, setChosenMonth] = useState<number>(getMonth(Date.now()));
@@ -24,6 +28,11 @@ export const Calender = (props: { onDaySelect: (e: Date) => void; onViewingMonth
 	useEffect(() => {
 		props.onViewingMonthChange(viewingMonth);
 	}, [viewingMonth]);
+
+	// On init, and when the viewing year changes, we want to emit the current viewing year
+	useEffect(() => {
+		props.onViewingYearChange(viewingYear);
+	}, [viewingYear]);
 
 	const getCalenderDays = () => {
 		let arr = [];
