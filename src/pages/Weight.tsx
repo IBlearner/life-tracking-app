@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Calender } from "../components/Calender/Calender";
 import { appsScriptURL, IDateWeightItem, months } from "../Constants";
-import { parseISO, format, isValid, formatISO, toDate } from "date-fns";
+import { parseISO, format, isValid, toDate } from "date-fns";
 import "./Weight.scss";
 
 // Graphing imports
@@ -50,7 +50,7 @@ export const Weight = (props: { userId: number }) => {
 			.then((response) => response.json())
 			.then((data) => {
 				const mappedData = data
-					.map((elem) => {
+					.map((elem: any) => {
 						// Date comes to us in ISO format so we must convert it to a Date type (or "") if it's invalid.
 						const elemDateConvert = isValid(parseISO(elem.date)) ? toDate(parseISO(elem.date)) : "";
 						// We don't care about entries that have invalid dates, so we'll map it as null then filter it out
@@ -63,7 +63,7 @@ export const Weight = (props: { userId: number }) => {
 							notes: elem.notes
 						} as IDateWeightItem;
 					})
-					.filter((elem) => {
+					.filter((elem: IDateWeightItem) => {
 						return !!elem;
 					});
 				setWeightData(mappedData);

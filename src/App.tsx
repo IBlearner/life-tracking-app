@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { IoHome } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
@@ -13,6 +13,10 @@ import { Weight } from "./pages/Weight";
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
 	const [userId, setUserId] = useState(123);
+
+	useEffect(() => {
+		setUserId(456);
+	}, []);
 
 	const getCurrentPage = () => {
 		switch (currentPage) {
