@@ -147,7 +147,9 @@ export const Weight = (props: { userId: number }) => {
 					label: months[viewingMonth].name,
 					data: weightDataArr,
 					borderColor: "rgb(53, 162, 235)",
-					backgroundColor: "rgba(53, 162, 235, 0.5)"
+					backgroundColor: "rgba(53, 162, 235, 0.5)",
+					spanGaps: true,
+					tension: 0.2
 				}
 			]
 		};
