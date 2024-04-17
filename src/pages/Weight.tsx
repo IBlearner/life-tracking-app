@@ -101,12 +101,6 @@ export const Weight = (props: { userId: number }) => {
 	};
 
 	const onSubmit = () => {
-		const data = {
-			date: chosenDate,
-			weight: weight,
-			notes: notes
-		};
-
 		// Our database is storing time as MM/dd/yyyy so we must format it as so
 		fetch(
 			`${appsScriptURL}?method=post&userId=${props.userId}&date=${format(
@@ -121,6 +115,11 @@ export const Weight = (props: { userId: number }) => {
 			.then((data) => {
 				// TODO: handle the response. 200 is OK, 400 is not.
 				console.log(data);
+
+				// We want to refresh the user's data after successful submit
+				if (data.status === "OK" && data.statusCode === 200) {
+					getData();
+				}
 			});
 
 		// TODO: add a set timer out to reload the page??
@@ -162,7 +161,7 @@ export const Weight = (props: { userId: number }) => {
 				},
 				title: {
 					display: true,
-					text: "Chart.js Line Chart"
+					text: `Weight progress for ${months[viewingMonth].name.toUpperCase()}`
 				}
 			}
 		};
@@ -183,10 +182,7 @@ export const Weight = (props: { userId: number }) => {
 			<label htmlFor="notes-input">Notes:</label>
 			<input id="notes-input" onChange={(e) => onNoteChange(e)} />
 			<button onClick={() => onSubmit()}>SUBMIT</button>
-			<p>{weight}</p>
 			<p>{notes}</p>
-			<p>Viewing month: {viewingMonth}</p>
-			<p>Viewing year: {viewingYear}</p>
 			{getWeightGraph()}
 			<p>Signed in as {props.userId}</p>
 		</div>
