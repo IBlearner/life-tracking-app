@@ -3,6 +3,7 @@ import { Calender } from "../components/Calender/Calender";
 import { appsScriptURL, IDateWeightItem, months } from "../Constants";
 import { parseISO, format, isValid, toDate } from "date-fns";
 import "./Weight.scss";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Graphing imports
 import {
@@ -30,6 +31,7 @@ export const Weight = (props: { userId: number }) => {
 	const [viewingYear, setViewingYear] = useState<number>(0);
 	const [weightData, setWeightData] = useState<IDateWeightItem[]>([]);
 	const [weightDataViewingPeriod, setWeightDataViewingPeriod] = useState<IDateWeightItem[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		// Get user data
@@ -44,6 +46,8 @@ export const Weight = (props: { userId: number }) => {
 	}, [viewingMonth, viewingYear, weightData]);
 
 	const getData = () => {
+		setIsLoading(true);
+
 		fetch(`${appsScriptURL}?userId=${props.userId}`, {
 			method: "GET"
 		})
@@ -67,6 +71,8 @@ export const Weight = (props: { userId: number }) => {
 						return !!elem;
 					});
 				setWeightData(mappedData);
+
+				setIsLoading(false);
 			});
 	};
 
@@ -101,6 +107,8 @@ export const Weight = (props: { userId: number }) => {
 	};
 
 	const onSubmit = () => {
+		setIsLoading(true);
+
 		// Our database is storing time as MM/dd/yyyy so we must format it as so
 		fetch(
 			`${appsScriptURL}?method=post&userId=${props.userId}&date=${format(
@@ -124,8 +132,6 @@ export const Weight = (props: { userId: number }) => {
 					setWeight(0);
 				}
 			});
-
-		// TODO: add a set timer out to reload the page??
 	};
 
 	const getWeightGraph = () => {
@@ -185,8 +191,15 @@ export const Weight = (props: { userId: number }) => {
 			<label htmlFor="notes-input">Notes:</label>
 			<input id="notes-input" onChange={(e) => onNoteChange(e)} value={notes} />
 			<button onClick={() => onSubmit()}>SUBMIT</button>
-			<p>{notes}</p>
-			{getWeightGraph()}
+			{isLoading ? (
+				<CircularProgress />
+			) : (
+				<div>
+					<p>{notes}</p>
+					{getWeightGraph()}
+				</div>
+			)}
+
 			<p>Signed in as {props.userId}</p>
 		</div>
 	);

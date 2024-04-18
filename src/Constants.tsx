@@ -63,3 +63,9 @@ export interface IDateWeightItem {
 	weight: number;
 	notes: string;
 }
+
+export interface IWasteCollectionItem {
+	suburb: string;
+	day: string;
+	zone: number;
+}

@@ -3,11 +3,18 @@ import { formatDistanceToNowStrict } from "date-fns";
 import "./WasteCollection.scss";
 import { IoCheckmark } from "react-icons/io5";
 import { BsTrash3 } from "react-icons/bs";
+import { IWasteCollectionItem } from "../Constants";
+
+// MUI imports
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 export const WasteCollection = () => {
 	const wasteCollectionDataFile = "waste_collection_data_clean.json";
 	const timeAnchor = new Date("2024-02-05");
-	const [wasteCollectionData, setWasteCollectionData] = useState([]);
+	const [wasteCollectionData, setWasteCollectionData] = useState<IWasteCollectionItem[]>([]);
 	const [selectedSuburb, setSelectedSuburb] = useState<string>("");
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedZone, setSelectedZone] = useState<number>(0);
@@ -20,7 +27,14 @@ export const WasteCollection = () => {
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				setWasteCollectionData(data);
+				const dataMapped: IWasteCollectionItem[] = data.map((elem: any) => {
+					return {
+						suburb: elem[0],
+						day: elem[1],
+						zone: elem[2][5]
+					} as IWasteCollectionItem;
+				});
+				setWasteCollectionData(dataMapped);
 			});
 
 		// Using date-fns package will return the distance between now and anchor as a string, so must convert to an number
@@ -40,48 +54,73 @@ export const WasteCollection = () => {
 		}
 	}, []);
 
+	const getSuburbDropdown = () => {
+		return (
+			<FormControl sx={{ m: 1, minWidth: 120 }}>
+				<InputLabel id="suburb-select-label">Suburb</InputLabel>
+				<Select
+					labelId="suburb-select-label"
+					id="suburb-select"
+					value={selectedSuburb}
+					onChange={(e) => onSuburbDropdownChange(e)}
+					autoWidth
+					label="Suburb"
+				>
+					<MenuItem value="">
+						<em>None</em>
+					</MenuItem>
+					{getSuburbOptions()}
+				</Select>
+			</FormControl>
+		);
+	};
+
 	const getSuburbOptions = () => {
-		return wasteCollectionData.sort().map((elem) => {
-			return (
-				<option value={elem} key={elem[0]}>
-					{elem[0]}
-				</option>
-			);
-		});
+		return (
+			wasteCollectionData
+				// Custom sort function to sort the array of objects by key "suburb"
+				.sort((a, b) => {
+					if (a.suburb < b.suburb) {
+						return -1;
+					}
+					if (a.suburb > b.suburb) {
+						return 1;
+					}
+					return 0;
+				})
+				.map((elem) => {
+					return (
+						<MenuItem value={elem.suburb} key={elem.suburb}>
+							{elem.suburb.toLowerCase()}
+						</MenuItem>
+					);
+				})
+		);
+	};
+
+	const onSuburbDropdownChange = (e: any) => {
+		const suburb = e.target.value;
+		const index = wasteCollectionData.findIndex((elem) => elem.suburb === suburb);
+		setSelectedSuburb(wasteCollectionData[index].suburb);
+		setSelectedDay(wasteCollectionData[index].day);
+		setSelectedZone(wasteCollectionData[index].zone);
+		setPreferenceSaved(false);
 	};
 
 	const getSuburbData = () => {
 		return (
-			<>
-				<div>
-					<p>
-						Your bin day is: <strong>{selectedDay}</strong>
-					</p>
-				</div>
+			<div id="suburb-specific-data">
+				<h3>Bin day: {selectedDay}</h3>
 				{getBinColours()}
 				{/* <p>
 					Click <button>here</button> to add a weekly reminder the night before. // Probably can't even do this w/o react native
 				</p> */}
-				<div id="save-preference">
-					<button
-						className={`${preferenceSaved ? "preference-saved" : "preference-not-saved"}`}
-						onClick={() => saveSuburbPreference()}
-					>
-						Save suburb preference
-					</button>
-					<IoCheckmark
-						id="checkmark"
-						className={`${preferenceSaved ? "checkmark-shown" : "checkmark-not-shown"}`}
-						enableBackground={"true"}
-						size={60}
-						color="rgb(0, 255, 4)"
-					/>
-				</div>
-			</>
+				{getSavePreferenceSection()}
+			</div>
 		);
 	};
 
-	const saveSuburbPreference = () => {
+	const onSaveSuburbPreference = () => {
 		window.localStorage.setItem("waste-collection-suburb-pref", selectedSuburb);
 		window.localStorage.setItem("waste-collection-day-pref", selectedDay);
 		window.localStorage.setItem("waste-collection-zone-pref", selectedZone.toString());
@@ -98,26 +137,32 @@ export const WasteCollection = () => {
 		);
 	};
 
+	const getSavePreferenceSection = () => {
+		return (
+			<div id="save-preference">
+				<button
+					className={`${preferenceSaved ? "preference-saved" : "preference-not-saved"}`}
+					onClick={() => onSaveSuburbPreference()}
+				>
+					Save suburb preference
+				</button>
+				<IoCheckmark
+					id="checkmark"
+					className={`${preferenceSaved ? "checkmark-shown" : "checkmark-not-shown"}`}
+					enableBackground={"true"}
+					size={60}
+					color="rgb(0, 255, 4)"
+				/>
+			</div>
+		);
+	};
+
 	return (
-		<div>
+		<div id="waste-collection-container">
 			<BsTrash3 size={80} />
-			{selectedSuburb ? <p>Showing for {selectedSuburb}</p> : <p>Select a suburb below</p>}
-			<label htmlFor="suburb-select">Choose a suburb: </label>
-			<select
-				name="suburbs"
-				id="suburb-select"
-				onChange={(e) => {
-					// e.target.value stringifies the data, so we need to handle this
-					const data = e.target.value.split(",");
-					setSelectedSuburb(data[0]);
-					setSelectedDay(data[1]);
-					setSelectedZone(Number.parseInt(data[2].split(" ")[1]));
-					setPreferenceSaved(false);
-				}}
-			>
-				<option value="choose-option">--Choose an option--</option>
-				{getSuburbOptions()}
-			</select>
+			<p>Use the dropdown below to choose a suburb</p>
+			{getSuburbDropdown()}
+			<h2>{selectedSuburb}</h2>
 			{selectedSuburb ? getSuburbData() : null}
 		</div>
 	);
