@@ -20,6 +20,7 @@ export const WasteCollection = () => {
 	const [selectedZone, setSelectedZone] = useState<number>(0);
 	const [isAltWeek, setIsAltWeek] = useState<boolean>(true); // Represents if Zone 2 is trash week
 	const [preferenceSaved, setPreferenceSaved] = useState<boolean>(false);
+	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>("");
 
 	useEffect(() => {
 		fetch(wasteCollectionDataFile, {
@@ -51,6 +52,9 @@ export const WasteCollection = () => {
 			setSelectedSuburb(suburbPref);
 			setSelectedDay(dayPref);
 			setSelectedZone(Number.parseInt(zonePref));
+
+			// Initialise state with suburb found in local storage
+			setSuburbSavedInStorage(suburbPref);
 		}
 	}, []);
 
@@ -100,10 +104,18 @@ export const WasteCollection = () => {
 
 	const onSuburbDropdownChange = (e: any) => {
 		const suburb = e.target.value;
-		const index = wasteCollectionData.findIndex((elem) => elem.suburb === suburb);
-		setSelectedSuburb(wasteCollectionData[index].suburb);
-		setSelectedDay(wasteCollectionData[index].day);
-		setSelectedZone(wasteCollectionData[index].zone);
+
+		if (suburb) {
+			const index = wasteCollectionData.findIndex((elem) => elem.suburb === suburb);
+			setSelectedSuburb(wasteCollectionData[index].suburb);
+			setSelectedDay(wasteCollectionData[index].day);
+			setSelectedZone(wasteCollectionData[index].zone);
+		} else {
+			setSelectedSuburb("");
+			setSelectedDay("");
+			setSelectedZone(0);
+		}
+
 		setPreferenceSaved(false);
 	};
 
@@ -125,6 +137,9 @@ export const WasteCollection = () => {
 		window.localStorage.setItem("waste-collection-day-pref", selectedDay);
 		window.localStorage.setItem("waste-collection-zone-pref", selectedZone.toString());
 		setPreferenceSaved(true);
+
+		// We also need a state to save which suburb the user has saved to track while they're on this page
+		setSuburbSavedInStorage(selectedSuburb);
 	};
 
 	const getBinColours = () => {
@@ -138,13 +153,15 @@ export const WasteCollection = () => {
 	};
 
 	const getSavePreferenceSection = () => {
+		const isSuburbAlreadySaved = selectedSuburb === suburbSavedInStorage;
 		return (
 			<div id="save-preference">
 				<button
 					className={`${preferenceSaved ? "preference-saved" : "preference-not-saved"}`}
+					disabled={isSuburbAlreadySaved}
 					onClick={() => onSaveSuburbPreference()}
 				>
-					Save suburb preference
+					{isSuburbAlreadySaved ? "Preference Saved" : "Save suburb preference"}
 				</button>
 				<IoCheckmark
 					id="checkmark"
