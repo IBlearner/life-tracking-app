@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Calender } from "../components/Calender/Calender";
-import { appsScriptURL, IDateWeightItem, months } from "../Constants";
+import { appsScriptURL, IDateWeightItem, IUserDetails, months } from "../Constants";
 import { parseISO, format, isValid, toDate } from "date-fns";
 import "./Weight.scss";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,7 +22,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 // Icon imports
 import { IoScaleOutline } from "react-icons/io5";
 
-export const Weight = (props: { userId: number }) => {
+export const Weight = (props: { user: IUserDetails | null }) => {
 	// Instantiating the chosen date as the current date
 	const [chosenDate, setChosenDate] = useState<Date>(new Date(Date.now()));
 	const [weight, setWeight] = useState<number>(0);
@@ -46,34 +46,39 @@ export const Weight = (props: { userId: number }) => {
 	}, [viewingMonth, viewingYear, weightData]);
 
 	const getData = () => {
-		setIsLoading(true);
+		if (!props.user) {
+			return console.log("There is no user signed in..");
+		} else {
+			setIsLoading(true);
 
-		fetch(`${appsScriptURL}?userId=${props.userId}`, {
-			method: "GET"
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				const mappedData = data
-					.map((elem: any) => {
-						// Date comes to us in ISO format so we must convert it to a Date type (or "") if it's invalid.
-						const elemDateConvert = isValid(parseISO(elem.date)) ? toDate(parseISO(elem.date)) : "";
-						// We don't care about entries that have invalid dates, so we'll map it as null then filter it out
-						// TODO: Add a check for other potential malformed values such as weight
-						if (!elemDateConvert) return null;
-						return {
-							id: elem.userId,
-							date: elemDateConvert,
-							weight: elem.weight,
-							notes: elem.notes
-						} as IDateWeightItem;
-					})
-					.filter((elem: IDateWeightItem) => {
-						return !!elem;
-					});
-				setWeightData(mappedData);
+			fetch(`${appsScriptURL}?userId=${props.user.id}`, {
+				method: "GET"
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+					const mappedData = data
+						.map((elem: any) => {
+							// Date comes to us in ISO format so we must convert it to a Date type (or "") if it's invalid.
+							const elemDateConvert = isValid(parseISO(elem.date)) ? toDate(parseISO(elem.date)) : "";
+							// We don't care about entries that have invalid dates, so we'll map it as null then filter it out
+							// TODO: Add a check for other potential malformed values such as weight
+							if (!elemDateConvert) return null;
+							return {
+								id: elem.userId,
+								date: elemDateConvert,
+								weight: elem.weight,
+								notes: elem.notes
+							} as IDateWeightItem;
+						})
+						.filter((elem: IDateWeightItem) => {
+							return !!elem;
+						});
+					setWeightData(mappedData);
 
-				setIsLoading(false);
-			});
+					setIsLoading(false);
+				});
+		}
 	};
 
 	const getDataForViewingMonth = () => {
@@ -107,31 +112,35 @@ export const Weight = (props: { userId: number }) => {
 	};
 
 	const onSubmit = () => {
-		setIsLoading(true);
+		if (!props.user) {
+			return console.log("There is no user signed in..");
+		} else {
+			setIsLoading(true);
 
-		// Our database is storing time as MM/dd/yyyy so we must format it as so
-		fetch(
-			`${appsScriptURL}?method=post&userId=${props.userId}&date=${format(
-				chosenDate,
-				"MM/dd/yyyy"
-			)}&weight=${weight}&notes=${notes}`,
-			{
-				method: "GET"
-			}
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				// TODO: handle the response. 200 is OK, 400 is not.
-				console.log(data);
-
-				// We want to refresh the user's data after successful submit
-				if (data.status === "OK" && data.statusCode === 200) {
-					getData();
-
-					// Clear the input field
-					setWeight(0);
+			// Our database is storing time as MM/dd/yyyy so we must format it as so
+			fetch(
+				`${appsScriptURL}?method=post&userId=${props.user.id}&date=${format(
+					chosenDate,
+					"MM/dd/yyyy"
+				)}&weight=${weight}&notes=${notes}`,
+				{
+					method: "GET"
 				}
-			});
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					// TODO: handle the response. 200 is OK, 400 is not.
+					console.log(data);
+
+					// We want to refresh the user's data after successful submit
+					if (data.status === "OK" && data.statusCode === 200) {
+						getData();
+
+						// Clear the input field
+						setWeight(0);
+					}
+				});
+		}
 	};
 
 	const getWeightGraph = () => {
@@ -200,7 +209,7 @@ export const Weight = (props: { userId: number }) => {
 				</div>
 			)}
 
-			<p>Signed in as {props.userId}</p>
+			{props.user ? <p>Signed in as {props.user.name}</p> : null}
 		</div>
 	);
 };

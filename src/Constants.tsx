@@ -1,5 +1,5 @@
 export const appsScriptURL: string =
-	"https://script.google.com/macros/s/AKfycbzR2BbU2UzIwbBluiQWKLxLohsSNYMPXZqWus0vRmb_7KaZ7p5g_5mW5jEa_hgKrywzng/exec";
+	"https://script.google.com/macros/s/AKfycbzaqv92fbtfMlaRrmrm_ZB7FFCbzMz0c2TFPOmGMgrvFzEZAsIkJcjdXQbqhZpcyIRE-A/exec";
 
 export interface IMonths {
 	name: string;
@@ -68,4 +68,14 @@ export interface IWasteCollectionItem {
 	suburb: string;
 	day: string;
 	zone: number;
+}
+
+export interface IUserDetails {
+	id: number;
+	name: string;
+}
+
+export interface IDropdownDetails {
+	id: number;
+	value: string; // use this in the component!
 }
