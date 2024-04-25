@@ -111,6 +111,7 @@ export const WasteCollection = () => {
 			setSelectedDay(wasteCollectionData[index].day);
 			setSelectedZone(wasteCollectionData[index].zone);
 		} else {
+			// Saving empty data to reset data
 			setSelectedSuburb("");
 			setSelectedDay("");
 			setSelectedZone(0);
