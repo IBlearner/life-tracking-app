@@ -1,38 +1,17 @@
+import { IPageDetails } from "../Constants";
 import "./Home.scss";
-import { MdOutlineLocalGroceryStore } from "react-icons/md";
-import { GiWeightLiftingUp } from "react-icons/gi";
-import { CiViewList } from "react-icons/ci";
-import { BsTrash3 } from "react-icons/bs";
-import { IoScaleOutline } from "react-icons/io5";
 
-export const Home = ({ updateCurrentPage }: { updateCurrentPage: (e: string) => void }) => {
-	const tiles = [
-		{
-			name: "exercise",
-			icon: <GiWeightLiftingUp size={100} />
-		},
-		{
-			name: "checklist",
-			icon: <CiViewList size={100} />
-		},
-		{
-			name: "groceries",
-			icon: <MdOutlineLocalGroceryStore size={100} />
-		},
-		{
-			name: "wasteCollection",
-			icon: <BsTrash3 size={100} />
-		},
-		{
-			name: "weight",
-			icon: <IoScaleOutline size={100} />
-		}
-	];
-
+export const Home = ({
+	updateCurrentPage,
+	pageDetails
+}: {
+	updateCurrentPage: (e: string) => void;
+	pageDetails: IPageDetails[];
+}) => {
 	const getTileButtons = () => {
 		return (
 			<div id="tile-buttons">
-				{tiles.map((elem) => {
+				{pageDetails.map((elem: IPageDetails) => {
 					return (
 						<div className="tile-button" onClick={() => updateCurrentPage(elem.name)}>
 							<div className="tile-icon">{elem.icon}</div>

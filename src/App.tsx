@@ -12,14 +12,45 @@ import { Checklist } from "./pages/Checklist";
 import { Weight } from "./pages/Weight";
 import { IDropdownDetails, IUserDetails } from "./Constants";
 
+// Icon imports
+import { MdOutlineLocalGroceryStore } from "react-icons/md";
+import { GiWeightLiftingUp } from "react-icons/gi";
+import { CiViewList } from "react-icons/ci";
+import { BsTrash3 } from "react-icons/bs";
+import { IoScaleOutline } from "react-icons/io5";
+import { GrDocumentMissing } from "react-icons/gr";
+
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
 	const [user, setUser] = useState<IUserDetails | null>(null);
 
+	const pageDetails = [
+		{
+			name: "exercise",
+			icon: <GiWeightLiftingUp size={100} />
+		},
+		{
+			name: "checklist",
+			icon: <CiViewList size={100} />
+		},
+		{
+			name: "groceries",
+			icon: <MdOutlineLocalGroceryStore size={100} />
+		},
+		{
+			name: "wasteCollection",
+			icon: <BsTrash3 size={100} />
+		},
+		{
+			name: "weight",
+			icon: <IoScaleOutline size={100} />
+		}
+	];
+
 	const getCurrentPage = () => {
 		switch (currentPage) {
 			case "home":
-				return <Home updateCurrentPage={updateCurrentPage} />;
+				return <Home updateCurrentPage={updateCurrentPage} pageDetails={pageDetails} />;
 			case "exercise":
 				return <Exercise />;
 			case "checklist":
@@ -33,11 +64,18 @@ function App() {
 		}
 	};
 
+	// Goes through the page details and finds the correct icon to display in the banner
+	const getCurrentPageIcon = () => {
+		const pageDetail = pageDetails.find((x) => x.name === currentPage);
+		const icon = pageDetail ? pageDetail.icon : <GrDocumentMissing size={100} />;
+		return icon;
+	};
+
 	const getToolbar = () => {
 		return (
 			<div id="toolbar">
 				<IoHome id="home-button-icon" size={30} onClick={() => setCurrentPage("home")} />
-				{user ? <span>Hello, {user.name}!</span> : null}
+				{getCurrentPageIcon()}
 				<IoMenu id="menu-button-icon" size={30} onClick={() => console.log("opening menu..")} />
 			</div>
 		);
@@ -93,6 +131,7 @@ function App() {
 			{/* <button onClick={() => handleAuthClick()}>Authorize</button> */}
 			{getCurrentPage()}
 			{tempLoginDropdown()}
+			{user ? <span>Signed in as {user.name}!</span> : null}
 		</div>
 	);
 }

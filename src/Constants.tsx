@@ -77,5 +77,10 @@ export interface IUserDetails {
 
 export interface IDropdownDetails {
 	id: number;
-	value: string; // use this in the component!
+	value: string;
+}
+
+export interface IPageDetails {
+	name: string;
+	icon: any;
 }

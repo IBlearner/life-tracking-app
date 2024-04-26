@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import "./WasteCollection.scss";
 import { IoCheckmark } from "react-icons/io5";
-import { BsTrash3 } from "react-icons/bs";
 import { IWasteCollectionItem } from "../Constants";
 
 // MUI imports
@@ -177,7 +176,6 @@ export const WasteCollection = () => {
 
 	return (
 		<div id="waste-collection-container">
-			<BsTrash3 size={80} />
 			<p>Use the dropdown below to choose a suburb</p>
 			{getSuburbDropdown()}
 			<h2>{selectedSuburb}</h2>

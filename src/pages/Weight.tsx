@@ -19,9 +19,6 @@ import {
 import { Line } from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-// Icon imports
-import { IoScaleOutline } from "react-icons/io5";
-
 export const Weight = (props: { user: IUserDetails | null }) => {
 	// Instantiating the chosen date as the current date
 	const [chosenDate, setChosenDate] = useState<Date>(new Date(Date.now()));
@@ -189,7 +186,6 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 
 	return (
 		<div id="weight-container">
-			<IoScaleOutline size={80} />
 			<Calender
 				onDaySelect={updateSelectedDay}
 				onViewingMonthChange={updateViewingMonth}
@@ -208,8 +204,6 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 					{getWeightGraph()}
 				</div>
 			)}
-
-			{props.user ? <p>Signed in as {props.user.name}</p> : null}
 		</div>
 	);
 };
