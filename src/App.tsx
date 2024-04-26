@@ -3,6 +3,7 @@ import "./App.css";
 import { IoHome } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
 import { Dropdown } from "./components/Dropdown/Dropdown";
+import { IDropdownDetails, IPageDetails, IUserDetails } from "./Constants";
 
 // Page imports
 import { Home } from "./pages/Home";
@@ -10,7 +11,7 @@ import { Exercise } from "./pages/Exercise";
 import { WasteCollection } from "./pages/WasteCollection";
 import { Checklist } from "./pages/Checklist";
 import { Weight } from "./pages/Weight";
-import { IDropdownDetails, IUserDetails } from "./Constants";
+import { Groceries } from "./pages/Groceries";
 
 // Icon imports
 import { MdOutlineLocalGroceryStore } from "react-icons/md";
@@ -24,7 +25,7 @@ function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
 	const [user, setUser] = useState<IUserDetails | null>(null);
 
-	const pageDetails = [
+	const pageDetails: IPageDetails[] = [
 		{
 			name: "exercise",
 			icon: <GiWeightLiftingUp size={100} />
@@ -55,6 +56,8 @@ function App() {
 				return <Exercise />;
 			case "checklist":
 				return <Checklist />;
+			case "groceries":
+				return <Groceries />;
 			case "wasteCollection":
 				return <WasteCollection />;
 			case "weight":
@@ -125,6 +128,12 @@ function App() {
 		);
 	};
 
+	const signOut = () => {
+		setUser(null);
+
+		// TODO: Need to also consider disabling user specific local storage items
+	};
+
 	return (
 		<div id="app-page">
 			{currentPage !== "home" ? getToolbar() : null}
@@ -132,6 +141,7 @@ function App() {
 			{getCurrentPage()}
 			{tempLoginDropdown()}
 			{user ? <span>Signed in as {user.name}!</span> : null}
+			{user ? <button onClick={signOut}>Sign out</button> : null}
 		</div>
 	);
 }
