@@ -3,7 +3,7 @@ import "./App.css";
 import { IoHome } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
 import { Dropdown } from "./components/Dropdown/Dropdown";
-import { IDropdownDetails, IPageDetails, IUserDetails } from "./Constants";
+import { IDropdownItem, IPageDetails, IUserDetails } from "./Constants";
 
 // Page imports
 import { Home } from "./pages/Home";
@@ -88,21 +88,21 @@ function App() {
 		setCurrentPage(page);
 	};
 
-	const updateUser = (option: IDropdownDetails) => {
+	const updateUser = (option: IDropdownItem) => {
 		// The dropdown component gives us a value of type IDropdownDetails so we must convert it to type IUserDetails
 		const optionAsUser = mapDropdownOptionToUser(option);
 		setUser(optionAsUser);
 	};
 
 	// Convert IDropdownDetails -> IUserDetails
-	const mapDropdownOptionToUser = (option: IDropdownDetails) => {
+	const mapDropdownOptionToUser = (option: IDropdownItem) => {
 		return {
 			id: option.id,
 			name: option.value
 		} as IUserDetails;
 	};
 
-	const tempLoginUsers: IDropdownDetails[] = [
+	const tempLoginUsers: IDropdownItem[] = [
 		{
 			id: 0,
 			value: "kienvi"

@@ -75,7 +75,7 @@ export interface IUserDetails {
 	name: string;
 }
 
-export interface IDropdownDetails {
+export interface IDropdownItem {
 	id: number;
 	value: string;
 }
@@ -83,4 +83,12 @@ export interface IDropdownDetails {
 export interface IPageDetails {
 	name: string;
 	icon: any;
+}
+
+export interface IGroceryItem {
+	id: number;
+	name: string;
+	quantity: number;
+	measurement: string;
+	isCommonGood: boolean;
 }

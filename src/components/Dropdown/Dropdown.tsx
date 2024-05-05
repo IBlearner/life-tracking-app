@@ -1,4 +1,4 @@
-import { IDropdownDetails } from "../../Constants";
+import { IDropdownItem } from "../../Constants";
 
 export const Dropdown = (props: {
 	// Unique identifier
@@ -7,12 +7,12 @@ export const Dropdown = (props: {
 	// TODO: make optional?
 	label: string;
 	// Options for the select to display
-	options: IDropdownDetails[];
+	options: IDropdownItem[];
 	// We want this callback to pass back the id only, no point in passing the entire dropdown object back
-	onDropdownChange: (e: IDropdownDetails) => void;
+	onDropdownChange: (e: IDropdownItem) => void;
 }) => {
 	const getDropdownOptions = () => {
-		return props.options.sort().map((elem: IDropdownDetails) => {
+		return props.options.sort().map((elem: IDropdownItem) => {
 			return (
 				<option value={elem.id} key={elem.id}>
 					{elem.value}
@@ -30,7 +30,7 @@ export const Dropdown = (props: {
 			<label htmlFor={props.id + "-input"}>{props.label}</label>
 
 			<select
-				name="pets"
+				name={props.id + "-input"}
 				id={props.id + "-input"}
 				onChange={(e) => {
 					const id = parseInt(e.target.value);
