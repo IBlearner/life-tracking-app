@@ -14,12 +14,13 @@ import { Weight } from "./pages/Weight";
 import { Groceries } from "./pages/Groceries";
 
 // Icon imports
-import { MdOutlineLocalGroceryStore } from "react-icons/md";
-import { GiWeightLiftingUp } from "react-icons/gi";
 import { CiViewList } from "react-icons/ci";
-import { BsTrash3 } from "react-icons/bs";
-import { IoScaleOutline } from "react-icons/io5";
+import { CiTrash } from "react-icons/ci";
 import { GrDocumentMissing } from "react-icons/gr";
+import { CiDumbbell } from "react-icons/ci";
+import { PiShoppingCartSimpleLight } from "react-icons/pi";
+import { PiBowlFoodLight } from "react-icons/pi";
+import { GiWeight } from "react-icons/gi";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
@@ -28,7 +29,7 @@ function App() {
 	const pageDetails: IPageDetails[] = [
 		{
 			name: "exercise",
-			icon: <GiWeightLiftingUp size={100} />
+			icon: <CiDumbbell size={100} />
 		},
 		{
 			name: "checklist",
@@ -36,15 +37,19 @@ function App() {
 		},
 		{
 			name: "groceries",
-			icon: <MdOutlineLocalGroceryStore size={100} />
+			icon: <PiShoppingCartSimpleLight size={100} />
 		},
 		{
 			name: "wasteCollection",
-			icon: <BsTrash3 size={100} />
+			icon: <CiTrash size={100} />
 		},
 		{
 			name: "weight",
-			icon: <IoScaleOutline size={100} />
+			icon: <GiWeight size={100} />
+		},
+		{
+			name: "foodTracker",
+			icon: <PiBowlFoodLight size={100} />
 		}
 	];
 

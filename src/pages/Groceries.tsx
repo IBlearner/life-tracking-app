@@ -131,7 +131,7 @@ export const Groceries = () => {
 			measurement: measurement,
 			isCommonGood: false
 		} as IGroceryItem;
-		console.log(item);
+
 		setGroceryList([...groceryList, item]);
 	};
 
