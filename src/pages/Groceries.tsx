@@ -3,13 +3,13 @@ import { IDropdownItem, IGroceryItem } from "../Constants";
 import { Dropdown } from "../components/Dropdown/Dropdown";
 
 export const Groceries = () => {
-	const [groceryList, setGroceryList] = useState<IGroceryItem[]>([]);
+	const [groceryListData, setGroceryListData] = useState<IGroceryItem[]>([]);
 	const [name, setName] = useState<string>("");
 	const [quantity, setQuantity] = useState<number>(0);
 	const [measurement, setMeasurement] = useState<string>("");
 
 	useEffect(() => {
-		setGroceryList(tempGroceryList);
+		setGroceryListData(tempGroceryList);
 	}, []);
 
 	const dropdownOptions: IDropdownItem[] = [
@@ -65,7 +65,7 @@ export const Groceries = () => {
 		}
 	];
 
-	const groceryListForm = () => {
+	const groceryItemForm = () => {
 		return (
 			<div id="grocery-list-form">
 				<label htmlFor="grocery-list-name-input">Name</label>
@@ -93,8 +93,8 @@ export const Groceries = () => {
 		);
 	};
 
-	const getGroceryList = () => {
-		return groceryList.map((elem) => {
+	const groceryList = () => {
+		return groceryListData.map((elem) => {
 			return getGroceryListItem(elem);
 		});
 	};
@@ -132,7 +132,7 @@ export const Groceries = () => {
 			isCommonGood: false
 		} as IGroceryItem;
 
-		setGroceryList([...groceryList, item]);
+		setGroceryListData([...groceryListData, item]);
 	};
 
 	const onSubmit = () => {
@@ -141,8 +141,8 @@ export const Groceries = () => {
 
 	return (
 		<div id="groceries-container">
-			{groceryListForm()}
-			{getGroceryList()}
+			{groceryItemForm()}
+			{groceryList()}
 			<button onClick={() => onSubmit()}>SAVE</button>
 		</div>
 	);
