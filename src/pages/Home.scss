@@ -12,6 +12,12 @@
 	padding: 10px 25px;
 }
 
+.tile-button.tile-not-available {
+	color: pink;
+	text-decoration: line-through;
+	cursor: not-allowed;
+}
+
 #home-title {
 	margin-top: 0;
 	margin-bottom: 10px;

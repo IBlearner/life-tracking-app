@@ -12,6 +12,7 @@ import { WasteCollection } from "./pages/WasteCollection";
 import { Checklist } from "./pages/Checklist";
 import { Weight } from "./pages/Weight";
 import { Groceries } from "./pages/Groceries";
+import { FoodTracker } from "./pages/FoodTracker";
 
 // Icon imports
 import { CiViewList } from "react-icons/ci";
@@ -29,26 +30,32 @@ function App() {
 	const pageDetails: IPageDetails[] = [
 		{
 			name: "exercise",
+			available: false,
 			icon: <CiDumbbell size={100} />
 		},
 		{
 			name: "checklist",
+			available: false,
 			icon: <CiViewList size={100} />
 		},
 		{
 			name: "groceries",
+			available: false,
 			icon: <PiShoppingCartSimpleLight size={100} />
 		},
 		{
-			name: "wasteCollection",
+			name: "bin days",
+			available: true,
 			icon: <CiTrash size={100} />
 		},
 		{
 			name: "weight",
+			available: false,
 			icon: <GiWeight size={100} />
 		},
 		{
-			name: "foodTracker",
+			name: "food tracker",
+			available: false,
 			icon: <PiBowlFoodLight size={100} />
 		}
 	];
@@ -56,7 +63,7 @@ function App() {
 	const getCurrentPage = () => {
 		switch (currentPage) {
 			case "home":
-				return <Home updateCurrentPage={updateCurrentPage} pageDetails={pageDetails} />;
+				return <Home updateCurrentPage={updateCurrentPage} pageDetails={pageDetails} user={user} />;
 			case "exercise":
 				return <Exercise />;
 			case "checklist":
@@ -67,6 +74,8 @@ function App() {
 				return <WasteCollection />;
 			case "weight":
 				return <Weight user={user} />;
+			case "foodTracker":
+				return <FoodTracker />;
 			default:
 				break;
 		}

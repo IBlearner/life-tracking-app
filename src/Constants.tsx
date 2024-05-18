@@ -82,6 +82,7 @@ export interface IDropdownItem {
 
 export interface IPageDetails {
 	name: string;
+	available: boolean;
 	icon: any;
 }
 
