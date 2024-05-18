@@ -44,7 +44,7 @@ function App() {
 			icon: <PiShoppingCartSimpleLight size={100} />
 		},
 		{
-			name: "bin days",
+			name: "waste + recycling",
 			available: true,
 			icon: <CiTrash size={100} />
 		},
@@ -70,11 +70,11 @@ function App() {
 				return <Checklist />;
 			case "groceries":
 				return <Groceries />;
-			case "wasteCollection":
+			case "waste + recycling":
 				return <WasteCollection />;
 			case "weight":
 				return <Weight user={user} />;
-			case "foodTracker":
+			case "food tracker":
 				return <FoodTracker />;
 			default:
 				break;

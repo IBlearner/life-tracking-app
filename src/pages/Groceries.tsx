@@ -65,7 +65,7 @@ export const Groceries = () => {
 		}
 	];
 
-	const groceryItemForm = () => {
+	const getGroceryItemForm = () => {
 		return (
 			<div id="grocery-list-form">
 				<label htmlFor="grocery-list-name-input">Name</label>
@@ -93,7 +93,7 @@ export const Groceries = () => {
 		);
 	};
 
-	const groceryList = () => {
+	const getGroceryList = () => {
 		return groceryListData.map((elem) => {
 			return getGroceryListItem(elem);
 		});
@@ -141,8 +141,8 @@ export const Groceries = () => {
 
 	return (
 		<div id="groceries-container">
-			{groceryItemForm()}
-			{groceryList()}
+			{getGroceryItemForm()}
+			{getGroceryList()}
 			<button onClick={() => onSubmit()}>SAVE</button>
 		</div>
 	);
