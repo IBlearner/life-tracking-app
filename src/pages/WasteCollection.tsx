@@ -134,17 +134,18 @@ export const WasteCollection = () => {
 					) : (
 						<FaGear color="grey" size={20} onClick={() => setIsDropdownAvailable(true)} />
 					)}
-					{suburbSavedInStorage === selectedSuburb ? (
-						<BsBookmarkFill className={"suburb-bookmarked"} size={20} />
-					) : (
-						<BsBookmarkStarFill
-							className={"suburb-not-bookmarked"}
-							size={20}
-							onClick={() => onSuburbBookmark()}
-						/>
-					)}
+					{selectedSuburb ? getBookmarkIcon() : undefined}
 				</div>
 			</div>
+		);
+	};
+
+	const getBookmarkIcon = () => {
+		// If what is saved in the user's LS === what they currently have selected the bookmark should be on
+		return suburbSavedInStorage === selectedSuburb ? (
+			<BsBookmarkFill className={"suburb-bookmarked"} size={20} />
+		) : (
+			<BsBookmarkStarFill className={"suburb-not-bookmarked"} size={20} onClick={() => onSuburbBookmark()} />
 		);
 	};
 
@@ -160,7 +161,7 @@ export const WasteCollection = () => {
 					autoWidth
 					label="Suburb"
 				>
-					<MenuItem value="">
+					<MenuItem value="" hidden={true} divider={true} disabled={true}>
 						<em>None</em>
 					</MenuItem>
 					{getSuburbOptions()}
@@ -235,7 +236,7 @@ export const WasteCollection = () => {
 				<h3>Kerbside collection: {updatedKerbsideDay}</h3>
 				{getKerbsideDayFromData() !== updatedKerbsideDay ? (
 					<span id="kerbside-inaccurate-message">
-						This kerbside collection date may not be accurate as it was based on the previous year's data.
+						Kerbside collection date is based off the previous year's data.
 					</span>
 				) : undefined}
 			</div>
