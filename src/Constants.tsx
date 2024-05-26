@@ -70,6 +70,11 @@ export interface IWasteCollectionItem {
 	zone: number;
 }
 
+export interface IKerbsideCollectionItem {
+	suburb: string;
+	day: string;
+}
+
 export interface IUserDetails {
 	id: number;
 	name: string;

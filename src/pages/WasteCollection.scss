@@ -15,27 +15,32 @@
 	padding-bottom: 40px;
 }
 
-.bin-colour {
-	background-color: black;
-	border: 1px solid orange;
-	width: 70px;
-	height: 70px;
-	border-radius: 100%;
+#suburb-selector-section {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
 
-	&.red {
-		background-color: rgb(186, 0, 0);
+#suburb-header {
+	padding-right: 10px;
+}
+
+.bin-icon {
+	&.red-bin {
+		color: rgb(186, 0, 0);
 	}
 
-	&.black {
-		background-color: black;
+	&.black-bin {
+		color: black;
 	}
 
-	&.yellow {
-		background-color: rgb(240, 240, 54);
+	&.yellow-bin {
+		color: rgb(240, 240, 54);
 	}
 
-	&.green {
-		background-color: rgb(0, 73, 0);
+	&.green-bin {
+		color: rgb(0, 73, 0);
 	}
 }
 

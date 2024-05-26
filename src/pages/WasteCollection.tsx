@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import "./WasteCollection.scss";
+import { IWasteCollectionItem, IKerbsideCollectionItem } from "../Constants";
+
+// Icon imports
+import { RiRecycleFill } from "react-icons/ri";
 import { IoCheckmark } from "react-icons/io5";
-import { IWasteCollectionItem } from "../Constants";
+import { IoIosLeaf } from "react-icons/io";
+import { BsFillTrash3Fill } from "react-icons/bs";
+import { FaGear } from "react-icons/fa6";
 
 // MUI imports
 import InputLabel from "@mui/material/InputLabel";
@@ -12,14 +18,17 @@ import Select from "@mui/material/Select";
 
 export const WasteCollection = () => {
 	const wasteCollectionDataFile = "waste_collection_data_clean.json";
-	const timeAnchor = new Date("2024-02-05");
+	const kerbsideCollectionDataFile = "kerbside_collection_data_clean.json";
 	const [wasteCollectionData, setWasteCollectionData] = useState<IWasteCollectionItem[]>([]);
+	const [kerbsideCollectionData, setKerbCollectionData] = useState<IKerbsideCollectionItem[]>([]);
+	const timeAnchor = new Date("2024-02-05");
 	const [selectedSuburb, setSelectedSuburb] = useState<string>("");
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedZone, setSelectedZone] = useState<number>(0);
 	const [isAltWeek, setIsAltWeek] = useState<boolean>(true); // Represents if Zone 2 is trash week
 	const [preferenceSaved, setPreferenceSaved] = useState<boolean>(false);
 	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>("");
+	const [isDropdownAvailable, setIsDropdownAvailable] = useState<boolean>(true);
 
 	useEffect(() => {
 		fetch(wasteCollectionDataFile, {
@@ -35,6 +44,20 @@ export const WasteCollection = () => {
 					} as IWasteCollectionItem;
 				});
 				setWasteCollectionData(dataMapped);
+			});
+
+		fetch(kerbsideCollectionDataFile, {
+			method: "GET"
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				const dataMapped: IKerbsideCollectionItem[] = data.map((elem: any) => {
+					return {
+						suburb: elem[0],
+						day: elem[1]
+					} as IKerbsideCollectionItem;
+				});
+				setKerbCollectionData(dataMapped);
 			});
 
 		// Using date-fns package will return the distance between now and anchor as a string, so must convert to an number
@@ -54,8 +77,70 @@ export const WasteCollection = () => {
 
 			// Initialise state with suburb found in local storage
 			setSuburbSavedInStorage(suburbPref);
+
+			// Toggling the dropdown if there is already a suburb saved as a preference
+			setIsDropdownAvailable(false);
 		}
 	}, []);
+
+	const onSuburbDropdownChange = (e: any) => {
+		const suburb = e.target.value;
+
+		if (suburb) {
+			const index = wasteCollectionData.findIndex((elem) => elem.suburb === suburb);
+			setSelectedSuburb(wasteCollectionData[index].suburb);
+			setSelectedDay(wasteCollectionData[index].day);
+			setSelectedZone(wasteCollectionData[index].zone);
+		} else {
+			// Saving empty data to reset data
+			setSelectedSuburb("");
+			setSelectedDay("");
+			setSelectedZone(0);
+		}
+
+		setPreferenceSaved(false);
+
+		// We want the dropdown to only disappear if the user selects an actual suburb
+		if (suburb) {
+			setIsDropdownAvailable(false);
+		}
+	};
+
+	const onSaveSuburbPreference = () => {
+		window.localStorage.setItem("waste-collection-suburb-pref", selectedSuburb);
+		window.localStorage.setItem("waste-collection-day-pref", selectedDay);
+		window.localStorage.setItem("waste-collection-zone-pref", selectedZone.toString());
+		setPreferenceSaved(true);
+
+		// We also need a state to save which suburb the user has saved to track while they're on this page
+		setSuburbSavedInStorage(selectedSuburb);
+	};
+
+	const isNatureBinWeek = (): boolean => {
+		return isAltWeek === (selectedZone == 2);
+	};
+
+	const getSuburbHeader = () => {
+		return <h2 id="suburb-header">{selectedSuburb}</h2>;
+	};
+
+	const getSuburbSelectorSection = () => {
+		return (
+			<div>
+				{selectedSuburb ? "" : <span>Use the dropdown below to choose a suburb</span>}
+				<div id="suburb-selector-section">
+					{getSuburbHeader()}
+					{isDropdownAvailable ? (
+						getSuburbDropdown()
+					) : (
+						<FaGear color="red" size={20} onClick={() => setIsDropdownAvailable(true)} />
+					)}
+
+					{}
+				</div>
+			</div>
+		);
+	};
 
 	const getSuburbDropdown = () => {
 		return (
@@ -101,53 +186,35 @@ export const WasteCollection = () => {
 		);
 	};
 
-	const onSuburbDropdownChange = (e: any) => {
-		const suburb = e.target.value;
-
-		if (suburb) {
-			const index = wasteCollectionData.findIndex((elem) => elem.suburb === suburb);
-			setSelectedSuburb(wasteCollectionData[index].suburb);
-			setSelectedDay(wasteCollectionData[index].day);
-			setSelectedZone(wasteCollectionData[index].zone);
-		} else {
-			// Saving empty data to reset data
-			setSelectedSuburb("");
-			setSelectedDay("");
-			setSelectedZone(0);
-		}
-
-		setPreferenceSaved(false);
-	};
-
 	const getSuburbData = () => {
 		return (
 			<div id="suburb-specific-data">
 				<h3>Bin day: {selectedDay}</h3>
-				{getBinColours()}
+				{getBinIcons()}
 				{/* <p>
 					Click <button>here</button> to add a weekly reminder the night before. // Probably can't even do this w/o react native
 				</p> */}
-				{getSavePreferenceSection()}
+				{getKerbsideDayComponent()}
 			</div>
 		);
 	};
 
-	const onSaveSuburbPreference = () => {
-		window.localStorage.setItem("waste-collection-suburb-pref", selectedSuburb);
-		window.localStorage.setItem("waste-collection-day-pref", selectedDay);
-		window.localStorage.setItem("waste-collection-zone-pref", selectedZone.toString());
-		setPreferenceSaved(true);
-
-		// We also need a state to save which suburb the user has saved to track while they're on this page
-		setSuburbSavedInStorage(selectedSuburb);
-	};
-
-	const getBinColours = () => {
+	const getBinIcons = () => {
 		return (
 			<div id="bin-colour-group">
-				<div className="bin-colour red"></div>
-				<div className="bin-colour black"></div>
-				<div className={`bin-colour ${isAltWeek === (selectedZone == 2) ? "yellow" : "green"}`}></div>
+				<div>
+					<BsFillTrash3Fill className="bin-icon red-bin" size={50} />
+				</div>
+				<div>
+					<BsFillTrash3Fill className="bin-icon black-bin" size={50} />
+				</div>
+				<div>
+					{isNatureBinWeek() ? (
+						<IoIosLeaf className="bin-icon green-bin" size={50} />
+					) : (
+						<RiRecycleFill className="bin-icon yellow-bin" size={50} />
+					)}
+				</div>
 			</div>
 		);
 	};
@@ -174,12 +241,22 @@ export const WasteCollection = () => {
 		);
 	};
 
+	const getKerbsideDayComponent = () => {
+		return <h3>Kerbside collection: {getKerbsideDay()}</h3>;
+	};
+
+	const getKerbsideDay = (): string => {
+		const kerbsideElem = kerbsideCollectionData.find(
+			(elem: IKerbsideCollectionItem) => elem.suburb === selectedSuburb
+		);
+		return kerbsideElem ? kerbsideElem.day : "";
+	};
+
 	return (
 		<div id="waste-collection-container">
-			<p>Use the dropdown below to choose a suburb</p>
-			{getSuburbDropdown()}
-			<h2>{selectedSuburb}</h2>
+			{getSuburbSelectorSection()}
 			{selectedSuburb ? getSuburbData() : null}
+			{getSavePreferenceSection()}
 		</div>
 	);
 };
