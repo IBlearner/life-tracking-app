@@ -5,10 +5,11 @@ import { IWasteCollectionItem, IKerbsideCollectionItem } from "../Constants";
 
 // Icon imports
 import { RiRecycleFill } from "react-icons/ri";
-import { IoCheckmark } from "react-icons/io5";
 import { IoIosLeaf } from "react-icons/io";
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { FaGear } from "react-icons/fa6";
+import { BsBookmarkStarFill } from "react-icons/bs";
+import { BsBookmarkFill } from "react-icons/bs";
 
 // MUI imports
 import InputLabel from "@mui/material/InputLabel";
@@ -26,7 +27,7 @@ export const WasteCollection = () => {
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedZone, setSelectedZone] = useState<number>(0);
 	const [isAltWeek, setIsAltWeek] = useState<boolean>(true); // Represents if Zone 2 is trash week
-	const [preferenceSaved, setPreferenceSaved] = useState<boolean>(false);
+	// Used to compare what suburb the user has currently saved
 	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>("");
 	const [isDropdownAvailable, setIsDropdownAvailable] = useState<boolean>(true);
 
@@ -65,20 +66,20 @@ export const WasteCollection = () => {
 		const cleanDaysSinceAnchor = Number.parseInt(rawDaysSinceAnchor[0]) ?? -1;
 		setIsAltWeek(cleanDaysSinceAnchor % 13 <= 6);
 
-		// Check local storage to see if user saved a preference. Set state if found.
+		// Check local storage to see if user has a saved suburb. Set state if found.
 		// If one local storage item was found but the others aren't? Better to only set state if they are all found.
-		const suburbPref = window.localStorage.getItem("waste-collection-suburb-pref");
-		const dayPref = window.localStorage.getItem("waste-collection-day-pref");
-		const zonePref = window.localStorage.getItem("waste-collection-zone-pref");
-		if (suburbPref && dayPref && zonePref) {
-			setSelectedSuburb(suburbPref);
-			setSelectedDay(dayPref);
-			setSelectedZone(Number.parseInt(zonePref));
+		const suburbBookmarkedLS = window.localStorage.getItem("waste-collection-suburb-bookmarked");
+		const dayBookmarkedLS = window.localStorage.getItem("waste-collection-day-bookmarked");
+		const zoneBookmarkedLS = window.localStorage.getItem("waste-collection-zone-bookmarked");
+		if (suburbBookmarkedLS && dayBookmarkedLS && zoneBookmarkedLS) {
+			setSelectedSuburb(suburbBookmarkedLS);
+			setSelectedDay(dayBookmarkedLS);
+			setSelectedZone(Number.parseInt(zoneBookmarkedLS));
 
 			// Initialise state with suburb found in local storage
-			setSuburbSavedInStorage(suburbPref);
+			setSuburbSavedInStorage(suburbBookmarkedLS);
 
-			// Toggling the dropdown if there is already a suburb saved as a preference
+			// Toggling the dropdown if there is already a suburb bookmarked
 			setIsDropdownAvailable(false);
 		}
 	}, []);
@@ -98,24 +99,22 @@ export const WasteCollection = () => {
 			setSelectedZone(0);
 		}
 
-		setPreferenceSaved(false);
-
 		// We want the dropdown to only disappear if the user selects an actual suburb
 		if (suburb) {
 			setIsDropdownAvailable(false);
 		}
 	};
 
-	const onSaveSuburbPreference = () => {
-		window.localStorage.setItem("waste-collection-suburb-pref", selectedSuburb);
-		window.localStorage.setItem("waste-collection-day-pref", selectedDay);
-		window.localStorage.setItem("waste-collection-zone-pref", selectedZone.toString());
-		setPreferenceSaved(true);
+	const onSuburbBookmark = () => {
+		window.localStorage.setItem("waste-collection-suburb-bookmarked", selectedSuburb);
+		window.localStorage.setItem("waste-collection-day-bookmarked", selectedDay);
+		window.localStorage.setItem("waste-collection-zone-bookmarked", selectedZone.toString());
 
 		// We also need a state to save which suburb the user has saved to track while they're on this page
 		setSuburbSavedInStorage(selectedSuburb);
 	};
 
+	// Fn to determine if it is green bin. If false then it has to be recycle week
 	const isNatureBinWeek = (): boolean => {
 		return isAltWeek === (selectedZone == 2);
 	};
@@ -134,6 +133,15 @@ export const WasteCollection = () => {
 						getSuburbDropdown()
 					) : (
 						<FaGear color="grey" size={20} onClick={() => setIsDropdownAvailable(true)} />
+					)}
+					{suburbSavedInStorage === selectedSuburb ? (
+						<BsBookmarkFill className={"suburb-bookmarked"} size={20} />
+					) : (
+						<BsBookmarkStarFill
+							className={"suburb-not-bookmarked"}
+							size={20}
+							onClick={() => onSuburbBookmark()}
+						/>
 					)}
 				</div>
 			</div>
@@ -217,28 +225,6 @@ export const WasteCollection = () => {
 		);
 	};
 
-	const getSavePreferenceComponent = () => {
-		const isSuburbAlreadySaved = selectedSuburb === suburbSavedInStorage;
-		return (
-			<div id="save-preference">
-				<button
-					className={`${preferenceSaved ? "preference-saved" : "preference-not-saved"}`}
-					disabled={isSuburbAlreadySaved}
-					onClick={() => onSaveSuburbPreference()}
-				>
-					{isSuburbAlreadySaved ? "Preference Saved" : "Save suburb preference"}
-				</button>
-				<IoCheckmark
-					id="checkmark"
-					className={`${preferenceSaved ? "checkmark-shown" : "checkmark-not-shown"}`}
-					enableBackground={"true"}
-					size={60}
-					color="rgb(0, 255, 4)"
-				/>
-			</div>
-		);
-	};
-
 	const getKerbsideComponent = () => {
 		const updatedKerbsideDay = getUpdatedKerbsideDay();
 
@@ -287,7 +273,6 @@ export const WasteCollection = () => {
 		<div id="waste-collection-container">
 			{getSuburbSelectorComponent()}
 			{selectedSuburb ? getSuburbData() : null}
-			{getSavePreferenceComponent()}
 		</div>
 	);
 };
