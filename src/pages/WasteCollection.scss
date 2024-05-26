@@ -15,7 +15,7 @@
 	padding-bottom: 40px;
 }
 
-#suburb-selector-section {
+#suburb-selector-component {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -116,4 +116,9 @@
 		opacity: 1;
 		z-index: 1;
 	}
+}
+
+#kerbside-inaccurate-message {
+	font-size: 15px;
+	font-style: italic;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict, add, isBefore, parse, format } from "date-fns";
 import "./WasteCollection.scss";
 import { IWasteCollectionItem, IKerbsideCollectionItem } from "../Constants";
 
@@ -124,19 +124,17 @@ export const WasteCollection = () => {
 		return <h2 id="suburb-header">{selectedSuburb}</h2>;
 	};
 
-	const getSuburbSelectorSection = () => {
+	const getSuburbSelectorComponent = () => {
 		return (
 			<div>
-				{selectedSuburb ? "" : <span>Use the dropdown below to choose a suburb</span>}
-				<div id="suburb-selector-section">
+				{selectedSuburb ? undefined : <span>Use the dropdown below to choose a suburb</span>}
+				<div id="suburb-selector-component">
 					{getSuburbHeader()}
 					{isDropdownAvailable ? (
 						getSuburbDropdown()
 					) : (
-						<FaGear color="red" size={20} onClick={() => setIsDropdownAvailable(true)} />
+						<FaGear color="grey" size={20} onClick={() => setIsDropdownAvailable(true)} />
 					)}
-
-					{}
 				</div>
 			</div>
 		);
@@ -194,7 +192,7 @@ export const WasteCollection = () => {
 				{/* <p>
 					Click <button>here</button> to add a weekly reminder the night before. // Probably can't even do this w/o react native
 				</p> */}
-				{getKerbsideDayComponent()}
+				{getKerbsideComponent()}
 			</div>
 		);
 	};
@@ -219,7 +217,7 @@ export const WasteCollection = () => {
 		);
 	};
 
-	const getSavePreferenceSection = () => {
+	const getSavePreferenceComponent = () => {
 		const isSuburbAlreadySaved = selectedSuburb === suburbSavedInStorage;
 		return (
 			<div id="save-preference">
@@ -241,22 +239,55 @@ export const WasteCollection = () => {
 		);
 	};
 
-	const getKerbsideDayComponent = () => {
-		return <h3>Kerbside collection: {getKerbsideDay()}</h3>;
+	const getKerbsideComponent = () => {
+		const updatedKerbsideDay = getUpdatedKerbsideDay();
+
+		// We need to check if the kerbsideDay in the data has been modified by us
+		// Because if we did, we must inform the user know it may not be accurate
+		return updatedKerbsideDay ? (
+			<div id="kerbside-component">
+				<h3>Kerbside collection: {updatedKerbsideDay}</h3>
+				{getKerbsideDayFromData() !== updatedKerbsideDay ? (
+					<span id="kerbside-inaccurate-message">
+						This kerbside collection date may not be accurate as it was based on the previous year's data.
+					</span>
+				) : undefined}
+			</div>
+		) : undefined;
 	};
 
-	const getKerbsideDay = (): string => {
+	const getKerbsideDayFromData = (): string => {
 		const kerbsideElem = kerbsideCollectionData.find(
 			(elem: IKerbsideCollectionItem) => elem.suburb === selectedSuburb
 		);
 		return kerbsideElem ? kerbsideElem.day : "";
 	};
 
+	const getUpdatedKerbsideDay = (): string => {
+		let kerbsideDay = getKerbsideDayFromData();
+
+		if (kerbsideDay) {
+			// Converting the string date to a workable date
+			let kerbsideDayAsDate = parse(kerbsideDay, "dd/MM/yyyy", new Date());
+
+			// We need to add a year onto the date IF the kurbside has already passed. Implementing while loop to accomodate all future years
+			while (isBefore(kerbsideDayAsDate, Date.now())) {
+				kerbsideDayAsDate = add(kerbsideDayAsDate, {
+					years: 1
+				});
+			}
+
+			kerbsideDay = format(kerbsideDayAsDate, "dd/MM/yyyy");
+		}
+
+		return kerbsideDay;
+	};
+
 	return (
 		<div id="waste-collection-container">
-			{getSuburbSelectorSection()}
+			{getSuburbSelectorComponent()}
 			{selectedSuburb ? getSuburbData() : null}
-			{getSavePreferenceSection()}
+			{getSavePreferenceComponent()}
 		</div>
 	);
 };
