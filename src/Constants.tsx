@@ -1,6 +1,25 @@
 export const appsScriptURL: string =
 	"https://script.google.com/macros/s/AKfycbzaqv92fbtfMlaRrmrm_ZB7FFCbzMz0c2TFPOmGMgrvFzEZAsIkJcjdXQbqhZpcyIRE-A/exec";
 
+export const text = {
+	wasteCollection: {
+		generalWasteMessageDo:
+			"tissues, books, clothing textiles, glass, food scraps, cartons, packaging, syringes (sealed), masks, light bulbs.",
+		generalWasteMessageDont:
+			"batteries, building materials, electronic products, furniture, gas cylinders, oil, paints, recycables, toxic products.",
+		recycleWasteMessageDo:
+			"cardboard boxes/packaging, firm plastic containers/bottles, glass bottles, paper, steel/aluminium.",
+		recycleWasteMessageDont:
+			"batteries, books, hangers, crockery, electronics, food/garden waste, light bulbs, ink catridges, syringes, polystyrene, soft plastic, textiles, tissues.",
+		greenWasteMessageDo: "grass, prunings, twigs, bark, flowers, weeds.",
+		greenWasteMessageDont:
+			"faeces, fruit/vege waste, plastics, logs, paper, recyclables, rocks/bricks, furniture, bamboo.",
+		wasteViewMoreLink:
+			"https://www.brisbane.qld.gov.au/clean-and-green/rubbish-tips-and-bins/rubbish-bins/bin-items",
+		kerbsideInaccurateMessage: "Kerbside collection date is based off the previous year's data."
+	}
+};
+
 export interface IMonths {
 	name: string;
 	days: number;
