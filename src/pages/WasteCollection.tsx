@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict, add, isBefore, parse, format } from "date-fns";
 import "./WasteCollection.scss";
-import { IWasteCollectionItem, IKerbsideCollectionItem } from "../Constants";
+import { IWasteCollectionItem, IKerbsideCollectionItem, text } from "../Constants";
 
 // Icon imports
 import { RiRecycleFill } from "react-icons/ri";
@@ -10,6 +10,8 @@ import { BsFillTrash3Fill } from "react-icons/bs";
 import { FaGear } from "react-icons/fa6";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { BsBookmarkFill } from "react-icons/bs";
+import { RiCheckboxCircleFill } from "react-icons/ri";
+import { RiErrorWarningFill } from "react-icons/ri";
 
 // MUI imports
 import InputLabel from "@mui/material/InputLabel";
@@ -27,9 +29,8 @@ export const WasteCollection = () => {
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedZone, setSelectedZone] = useState<number>(0);
 	const [isAltWeek, setIsAltWeek] = useState<boolean>(true); // Represents if Zone 2 is trash week
-	// Used to compare what suburb the user has currently saved
-	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>("");
-	const [isDropdownAvailable, setIsDropdownAvailable] = useState<boolean>(true);
+	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>(""); // Used to compare what suburb the user has currently saved
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true); // If the dropdown to select the suburb is open
 
 	useEffect(() => {
 		fetch(wasteCollectionDataFile, {
@@ -80,7 +81,7 @@ export const WasteCollection = () => {
 			setSuburbSavedInStorage(suburbBookmarkedLS);
 
 			// Toggling the dropdown if there is already a suburb bookmarked
-			setIsDropdownAvailable(false);
+			setIsDropdownOpen(false);
 		}
 	}, []);
 
@@ -101,17 +102,26 @@ export const WasteCollection = () => {
 
 		// We want the dropdown to only disappear if the user selects an actual suburb
 		if (suburb) {
-			setIsDropdownAvailable(false);
+			setIsDropdownOpen(false);
 		}
 	};
 
-	const onSuburbBookmark = () => {
-		window.localStorage.setItem("waste-collection-suburb-bookmarked", selectedSuburb);
-		window.localStorage.setItem("waste-collection-day-bookmarked", selectedDay);
-		window.localStorage.setItem("waste-collection-zone-bookmarked", selectedZone.toString());
+	const onSuburbBookmark = (toggle: boolean) => {
+		if (toggle) {
+			window.localStorage.setItem("waste-collection-suburb-bookmarked", selectedSuburb);
+			window.localStorage.setItem("waste-collection-day-bookmarked", selectedDay);
+			window.localStorage.setItem("waste-collection-zone-bookmarked", selectedZone.toString());
 
-		// We also need a state to save which suburb the user has saved to track while they're on this page
-		setSuburbSavedInStorage(selectedSuburb);
+			// We also need a state to save which suburb the user has saved to track while they're on this page
+			setSuburbSavedInStorage(selectedSuburb);
+		} else {
+			window.localStorage.removeItem("waste-collection-suburb-bookmarked");
+			window.localStorage.removeItem("waste-collection-day-bookmarked");
+			window.localStorage.removeItem("waste-collection-zone-bookmarked");
+
+			// Clearing whatever the user has stored
+			setSuburbSavedInStorage("");
+		}
 	};
 
 	// Fn to determine if it is green bin. If false then it has to be recycle week
@@ -123,16 +133,20 @@ export const WasteCollection = () => {
 		return <h2 id="suburb-header">{selectedSuburb}</h2>;
 	};
 
+	const getBinDayHeader = () => {
+		return <span id="bin-day-header">{[selectedDay[0], selectedDay.slice(1).toLowerCase()].join("")}</span>;
+	};
+
 	const getSuburbSelectorComponent = () => {
 		return (
 			<div>
 				{selectedSuburb ? undefined : <span>Use the dropdown below to choose a suburb</span>}
 				<div id="suburb-selector-component">
 					{getSuburbHeader()}
-					{isDropdownAvailable ? (
+					{isDropdownOpen ? (
 						getSuburbDropdown()
 					) : (
-						<FaGear color="grey" size={20} onClick={() => setIsDropdownAvailable(true)} />
+						<FaGear color="grey" size={20} onClick={() => setIsDropdownOpen(true)} />
 					)}
 					{selectedSuburb ? getBookmarkIcon() : undefined}
 				</div>
@@ -143,9 +157,9 @@ export const WasteCollection = () => {
 	const getBookmarkIcon = () => {
 		// If what is saved in the user's LS === what they currently have selected the bookmark should be on
 		return suburbSavedInStorage === selectedSuburb ? (
-			<BsBookmarkFill className={"suburb-bookmarked"} size={20} />
+			<BsBookmarkFill className={"suburb-bookmarked"} size={20} onClick={() => onSuburbBookmark(false)} />
 		) : (
-			<BsBookmarkStarFill className={"suburb-not-bookmarked"} size={20} onClick={() => onSuburbBookmark()} />
+			<BsBookmarkStarFill className={"suburb-not-bookmarked"} size={20} onClick={() => onSuburbBookmark(true)} />
 		);
 	};
 
@@ -193,19 +207,6 @@ export const WasteCollection = () => {
 		);
 	};
 
-	const getSuburbData = () => {
-		return (
-			<div id="suburb-specific-data">
-				<h3>Bin day: {selectedDay}</h3>
-				{getBinIcons()}
-				{/* <p>
-					Click <button>here</button> to add a weekly reminder the night before. // Probably can't even do this w/o react native
-				</p> */}
-				{getKerbsideComponent()}
-			</div>
-		);
-	};
-
 	const getBinIcons = () => {
 		return (
 			<div id="bin-colour-group">
@@ -222,6 +223,25 @@ export const WasteCollection = () => {
 						<RiRecycleFill className="bin-icon yellow-bin" size={50} />
 					)}
 				</div>
+				{getBinDayHeader()}
+			</div>
+		);
+	};
+
+	const getBinDescriptions = () => {
+		return (
+			<div id="bin-descriptions">
+				<div className="bin-descriptions-row">
+					<RiCheckboxCircleFill size={80} color="green" />
+					<p>Includes: {text.wasteCollection.generalWasteMessageDo}</p>
+				</div>
+				<div className="bin-descriptions-row">
+					<RiErrorWarningFill size={80} color="orange" />
+					<p>Includes: {text.wasteCollection.generalWasteMessageDo}</p>
+				</div>
+				<p>
+					Visit the <a href={text.wasteCollection.wasteViewMoreLink}>official website</a> for more info.
+				</p>
 			</div>
 		);
 	};
@@ -235,9 +255,7 @@ export const WasteCollection = () => {
 			<div id="kerbside-component">
 				<h3>Kerbside collection: {updatedKerbsideDay}</h3>
 				{getKerbsideDayFromData() !== updatedKerbsideDay ? (
-					<span id="kerbside-inaccurate-message">
-						Kerbside collection date is based off the previous year's data.
-					</span>
+					<span id="kerbside-inaccurate-message">{text.wasteCollection.kerbsideInaccurateMessage}</span>
 				) : undefined}
 			</div>
 		) : undefined;
@@ -257,7 +275,7 @@ export const WasteCollection = () => {
 			// Converting the string date to a workable date
 			let kerbsideDayAsDate = parse(kerbsideDay, "dd/MM/yyyy", new Date());
 
-			// We need to add a year onto the date IF the kurbside has already passed. Implementing while loop to accomodate all future years
+			// We need to add a year onto the date IF the kerbside has already passed. Implementing while loop to accomodate all future years
 			while (isBefore(kerbsideDayAsDate, Date.now())) {
 				kerbsideDayAsDate = add(kerbsideDayAsDate, {
 					years: 1
@@ -273,7 +291,17 @@ export const WasteCollection = () => {
 	return (
 		<div id="waste-collection-container">
 			{getSuburbSelectorComponent()}
-			{selectedSuburb ? getSuburbData() : null}
+
+			{selectedSuburb ? (
+				<>
+					{getBinIcons()}
+					{getBinDescriptions()}
+					{/* <p>
+                        Click <button>here</button> to add a weekly reminder the night before. // Probably can't even do this w/o react native
+                    </p> */}
+					{getKerbsideComponent()}
+				</>
+			) : undefined}
 		</div>
 	);
 };

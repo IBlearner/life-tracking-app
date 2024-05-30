@@ -11,8 +11,7 @@
 	align-items: center;
 	gap: 20px;
 
-	padding-top: 0;
-	padding-bottom: 40px;
+	padding: 0 0 10px 0;
 }
 
 #suburb-selector-component {
@@ -24,6 +23,13 @@
 
 #suburb-selector-component {
 	gap: 10px;
+}
+
+#bin-day-header {
+	height: 100%;
+	padding-left: 20px;
+	border-left: 1px solid white;
+	font-size: 24px;
 }
 
 .bin-icon {
@@ -41,6 +47,29 @@
 
 	&.green-bin {
 		color: rgb(0, 73, 0);
+	}
+}
+
+#bin-descriptions {
+	padding: 0 6px 12px 6px;
+
+	border: 1px solid grey;
+	border-radius: 6px;
+
+	> p {
+		margin: 0;
+		font-size: 14px;
+	}
+
+	> .bin-descriptions-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		> p {
+			margin: 0;
+			font-size: 14px;
+		}
 	}
 }
 
