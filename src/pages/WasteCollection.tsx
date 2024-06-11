@@ -6,18 +6,22 @@ import { IWasteCollectionItem, IKerbsideCollectionItem, text } from "../Constant
 // Icon imports
 import { RiRecycleFill } from "react-icons/ri";
 import { IoIosLeaf } from "react-icons/io";
-import { BsFillTrash3Fill } from "react-icons/bs";
+import { BsFillTrash3Fill, BsBookmarkStarFill, BsBookmarkFill } from "react-icons/bs";
 import { FaGear } from "react-icons/fa6";
-import { BsBookmarkStarFill } from "react-icons/bs";
-import { BsBookmarkFill } from "react-icons/bs";
-import { RiCheckboxCircleFill } from "react-icons/ri";
-import { RiErrorWarningFill } from "react-icons/ri";
+import { RiCheckboxCircleFill, RiErrorWarningFill } from "react-icons/ri";
+import { GoDot, GoDotFill } from "react-icons/go";
 
 // MUI imports
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+
+enum BinInfoTypes {
+	general = "general",
+	recycle = "recycle",
+	green = "green"
+}
 
 export const WasteCollection = () => {
 	const wasteCollectionDataFile = "waste_collection_data_clean.json";
@@ -31,6 +35,7 @@ export const WasteCollection = () => {
 	const [isAltWeek, setIsAltWeek] = useState<boolean>(true); // Represents if Zone 2 is trash week
 	const [suburbSavedInStorage, setSuburbSavedInStorage] = useState<string>(""); // Used to compare what suburb the user has currently saved
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true); // If the dropdown to select the suburb is open
+	const [selectedBinInfo, setSelectedBinInfo] = useState<BinInfoTypes | undefined>(undefined); // If the dropdown to select the suburb is open
 
 	useEffect(() => {
 		fetch(wasteCollectionDataFile, {
@@ -124,6 +129,11 @@ export const WasteCollection = () => {
 		}
 	};
 
+	const onSelectedBinInfoChange = (target: BinInfoTypes) => {
+		// If the selected bin info is already the same as what they're clicking, toggle the info panel off (by making it undefined)
+		setSelectedBinInfo(selectedBinInfo === target ? undefined : target);
+	};
+
 	// Fn to determine if it is green bin. If false then it has to be recycle week
 	const isNatureBinWeek = (): boolean => {
 		return isAltWeek === (selectedZone == 2);
@@ -207,43 +217,93 @@ export const WasteCollection = () => {
 		);
 	};
 
+	const getBinIconDot = (isFilled: boolean) => {
+		return isFilled ? <GoDotFill /> : <GoDot />;
+	};
+
 	const getBinIcons = () => {
 		return (
-			<div id="bin-colour-group">
-				<div>
-					<BsFillTrash3Fill className="bin-icon red-bin" size={50} />
+			<div id="bin-icon-group">
+				<div id="bin-icon-groupling">
+					<BsFillTrash3Fill
+						className="bin-icon red-bin"
+						size={50}
+						onClick={() => onSelectedBinInfoChange(BinInfoTypes.general)}
+					/>
+					{getBinIconDot(selectedBinInfo === BinInfoTypes.general)}
 				</div>
-				<div>
-					<BsFillTrash3Fill className="bin-icon black-bin" size={50} />
+				<div id="bin-icon-groupling">
+					<BsFillTrash3Fill
+						className="bin-icon black-bin"
+						size={50}
+						onClick={() => onSelectedBinInfoChange(BinInfoTypes.general)}
+					/>
+					{getBinIconDot(selectedBinInfo === BinInfoTypes.general)}
 				</div>
-				<div>
-					{isNatureBinWeek() ? (
-						<IoIosLeaf className="bin-icon green-bin" size={50} />
-					) : (
-						<RiRecycleFill className="bin-icon yellow-bin" size={50} />
-					)}
-				</div>
+				{isNatureBinWeek() ? (
+					<div id="bin-icon-groupling">
+						<IoIosLeaf
+							className="bin-icon green-bin"
+							size={50}
+							onClick={() => onSelectedBinInfoChange(BinInfoTypes.green)}
+						/>
+						{getBinIconDot(selectedBinInfo === BinInfoTypes.green)}
+					</div>
+				) : (
+					<div id="bin-icon-groupling">
+						<RiRecycleFill
+							className="bin-icon yellow-bin"
+							size={50}
+							onClick={() => onSelectedBinInfoChange(BinInfoTypes.recycle)}
+						/>
+						{getBinIconDot(selectedBinInfo === BinInfoTypes.recycle)}
+					</div>
+				)}
 				{getBinDayHeader()}
 			</div>
 		);
 	};
 
 	const getBinDescriptions = () => {
-		return (
+		let doText: string = "";
+		let dontText: string = "";
+
+		switch (selectedBinInfo) {
+			case BinInfoTypes.general:
+				doText = text.wasteCollection.generalWasteMessageDo;
+				dontText = text.wasteCollection.generalWasteMessageDont;
+				break;
+			case BinInfoTypes.green:
+				doText = text.wasteCollection.greenWasteMessageDo;
+				dontText = text.wasteCollection.greenWasteMessageDont;
+				break;
+			case BinInfoTypes.recycle:
+				doText = text.wasteCollection.recycleWasteMessageDo;
+				dontText = text.wasteCollection.recycleWasteMessageDont;
+				break;
+			default:
+				break;
+		}
+		return selectedBinInfo ? (
 			<div id="bin-descriptions">
+				{selectedBinInfo === BinInfoTypes.general}
 				<div className="bin-descriptions-row">
 					<RiCheckboxCircleFill size={80} color="green" />
-					<p>Includes: {text.wasteCollection.generalWasteMessageDo}</p>
+					<p>Includes: {doText}</p>
 				</div>
 				<div className="bin-descriptions-row">
 					<RiErrorWarningFill size={80} color="orange" />
-					<p>Includes: {text.wasteCollection.generalWasteMessageDo}</p>
+					<p>Includes: {dontText}</p>
 				</div>
 				<p>
-					Visit the <a href={text.wasteCollection.wasteViewMoreLink}>official website</a> for more info.
+					Visit the&nbsp;
+					<a href={text.wasteCollection.wasteViewMoreLink} target="_blank">
+						official website
+					</a>
+					&nbsp;for more info.
 				</p>
 			</div>
-		);
+		) : undefined;
 	};
 
 	const getKerbsideComponent = () => {
