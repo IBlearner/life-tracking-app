@@ -4,6 +4,7 @@ import { appsScriptURL, IDateWeightItem, IUserDetails, months } from "../Constan
 import { parseISO, format, isValid, toDate } from "date-fns";
 import "./Weight.scss";
 import CircularProgress from "@mui/material/CircularProgress";
+import supabase from "../configs/supabaseClient";
 
 // Graphing imports
 import {
@@ -42,39 +43,27 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 		getDataForViewingMonth();
 	}, [viewingMonth, viewingYear, weightData]);
 
-	const getData = () => {
+	const getData = async () => {
 		if (!props.user) {
 			return console.log("There is no user signed in..");
 		} else {
 			setIsLoading(true);
 
-			fetch(`${appsScriptURL}?userId=${props.user.id}`, {
-				method: "GET"
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					console.log(data);
-					const mappedData = data
-						.map((elem: any) => {
-							// Date comes to us in ISO format so we must convert it to a Date type (or "") if it's invalid.
-							const elemDateConvert = isValid(parseISO(elem.date)) ? toDate(parseISO(elem.date)) : "";
-							// We don't care about entries that have invalid dates, so we'll map it as null then filter it out
-							// TODO: Add a check for other potential malformed values such as weight
-							if (!elemDateConvert) return null;
-							return {
-								id: elem.userId,
-								date: elemDateConvert,
-								weight: elem.weight,
-								notes: elem.notes
-							} as IDateWeightItem;
-						})
-						.filter((elem: IDateWeightItem) => {
-							return !!elem;
-						});
-					setWeightData(mappedData);
+			const { data, error, status } = await supabase.from("Weight data").select();
 
-					setIsLoading(false);
+			if (error) throw error;
+			if (status === 200) {
+				const mappedData = data.map((elem) => {
+					return {
+						id: elem.user_id,
+						date: elem.date,
+						weight: elem.weight,
+						notes: elem.notes
+					} as IDateWeightItem;
 				});
+				setWeightData(mappedData);
+				setIsLoading(false);
+			}
 		}
 	};
 
@@ -108,35 +97,28 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 		setNotes(e.target.value);
 	};
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
 		if (!props.user) {
 			return console.log("There is no user signed in..");
 		} else {
 			setIsLoading(true);
 
-			// Our database is storing time as MM/dd/yyyy so we must format it as so
-			fetch(
-				`${appsScriptURL}?method=post&userId=${props.user.id}&date=${format(
-					chosenDate,
-					"MM/dd/yyyy"
-				)}&weight=${weight}&notes=${notes}`,
-				{
-					method: "GET"
-				}
-			)
-				.then((response) => response.json())
-				.then((data) => {
-					// TODO: handle the response. 200 is OK, 400 is not.
-					console.log(data);
+			const { data, error, status, statusText } = await supabase
+				.from("Weight data")
+				.insert({ date: chosenDate, weight: weight, notes: notes, user_id: props.user?.id })
+				.select();
 
-					// We want to refresh the user's data after successful submit
-					if (data.status === "OK" && data.statusCode === 200) {
-						getData();
+			if (error) throw error;
+			if (status === 201 && statusText === "Created") {
+				console.log(data);
 
-						// Clear the input field
-						setWeight(0);
-					}
-				});
+				// Refresh user data
+				getData();
+				// Clear the input field
+				setWeight(0);
+
+				setIsLoading(false);
+			}
 		}
 	};
 
