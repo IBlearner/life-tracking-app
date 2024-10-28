@@ -1,5 +1,11 @@
 import { ReactNode } from "react";
 
+export interface IListItem {
+	id: number;
+	name: string;
+	createdDate: string; // TODO: Make this a Date type?
+}
+
 export interface IMonths {
 	name: string;
 	days: number;
@@ -39,10 +45,15 @@ export interface IPageDetails {
 	icon: ReactNode;
 }
 
-export interface IGroceryItem {
-	id: number;
-	name: string;
+export interface IGroceryItem extends IListItem {
 	quantity: number;
 	measurement: string;
 	isCommonGood: boolean;
 }
+
+export interface IChecklistItem extends IListItem {
+	completed: boolean;
+	completedDate?: string; // TODO: Make this a Date type?
+}
+
+export interface IWishlistItem extends IListItem {}

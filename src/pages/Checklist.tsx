@@ -1,13 +1,7 @@
 import { ChangeEvent, useState, MouseEvent } from "react";
 import "./Checklist.scss";
 import { CiViewList } from "react-icons/ci";
-
-interface IChecklistItem {
-	name: string;
-	completed: boolean;
-	createdDate: string; // Could be Date?
-	completedDate?: string; // Could be Date?
-}
+import { IChecklistItem } from "../Interfaces";
 
 export const Checklist = () => {
 	const [data, setData] = useState<IChecklistItem[]>([]);
@@ -38,6 +32,8 @@ export const Checklist = () => {
 
 	const addItemToList = () => {
 		const newItem: IChecklistItem = {
+			// TODO: update this id field. Setting this to 0 as I just updated IChecklistItem to extend from IListItem
+			id: 0,
 			name: itemInput,
 			completed: false,
 			createdDate: Date.now().toString()
@@ -66,6 +62,8 @@ export const Checklist = () => {
 
 	const updateChecklistChecked = (e: MouseEvent<HTMLInputElement>, index: number) => {
 		const newItem: IChecklistItem = {
+			// TODO: update this id field. Setting this to 0 as I just updated IChecklistItem to extend from IListItem
+			id: 0,
 			name: data[index].name,
 			completed: !data[index].completed,
 			createdDate: data[index].createdDate,
