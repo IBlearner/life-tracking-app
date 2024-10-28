@@ -1,4 +1,5 @@
 import { IWishlistItem } from "../../Interfaces";
+import { Listitem } from "../../components/ListItem/ListItem";
 
 export const Wishlist = () => {
 	const mockWishlist: IWishlistItem[] = [
@@ -9,9 +10,11 @@ export const Wishlist = () => {
 		{ id: 0, name: "fd43124sfds", createdDate: "now" },
 		{ id: 0, name: "fde23423234Ssfds", createdDate: "now" }
 	];
+
+	// get the mapped wishlist
 	const getList = (items: IWishlistItem[]) => {
-		return items.map((elem) => {
-			return elem.name;
+		return items.map((elem: IWishlistItem) => {
+			return <Listitem name={elem.name} />;
 		});
 	};
 
