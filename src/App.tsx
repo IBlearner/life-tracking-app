@@ -3,7 +3,7 @@ import "./App.css";
 import { IoHome } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
 import { Dropdown } from "./components/Dropdown/Dropdown";
-import { IDropdownItem, IPageDetails, IUserDetails } from "./Constants";
+import { IDropdownItem, IPageDetails, IUserDetails } from "./Interfaces";
 
 // Page imports
 import { Home } from "./pages/Home";

@@ -1,7 +1,4 @@
-import { ReactNode } from "react";
-
-export const appsScriptURL: string =
-	"https://script.google.com/macros/s/AKfycbzaqv92fbtfMlaRrmrm_ZB7FFCbzMz0c2TFPOmGMgrvFzEZAsIkJcjdXQbqhZpcyIRE-A/exec";
+import { IMonths } from "./Interfaces";
 
 export const text = {
 	wasteCollection: {
@@ -21,11 +18,6 @@ export const text = {
 		kerbsideInaccurateMessage: "Kerbside collection date is based off the previous year's data."
 	}
 };
-
-export interface IMonths {
-	name: string;
-	days: number;
-}
 
 export const months: IMonths[] = [
 	{
@@ -77,45 +69,3 @@ export const months: IMonths[] = [
 		days: 31
 	}
 ];
-
-export interface IDateWeightItem {
-	id: number;
-	date: Date;
-	weight: number;
-	notes: string;
-}
-
-export interface IWasteCollectionItem {
-	suburb: string;
-	day: string;
-	zone: number;
-}
-
-export interface IKerbsideCollectionItem {
-	suburb: string;
-	day: string;
-}
-
-export interface IUserDetails {
-	id: number;
-	name: string;
-}
-
-export interface IDropdownItem {
-	id: number;
-	value: string;
-}
-
-export interface IPageDetails {
-	name: string;
-	available: boolean;
-	icon: ReactNode;
-}
-
-export interface IGroceryItem {
-	id: number;
-	name: string;
-	quantity: number;
-	measurement: string;
-	isCommonGood: boolean;
-}
