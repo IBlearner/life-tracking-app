@@ -13,6 +13,7 @@ import { Checklist } from "./pages/Checklist";
 import { Weight } from "./pages/Weight";
 import { Groceries } from "./pages/Groceries";
 import { FoodTracker } from "./pages/FoodTracker";
+import { Wishlist } from "./pages/Wishlist/Wishlist";
 
 // Icon imports
 import { CiViewList } from "react-icons/ci";
@@ -22,6 +23,7 @@ import { CiDumbbell } from "react-icons/ci";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { PiBowlFoodLight } from "react-icons/pi";
 import { GiWeight } from "react-icons/gi";
+import { LiaListOlSolid } from "react-icons/lia";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState<string>("home");
@@ -50,16 +52,22 @@ function App() {
 		},
 		{
 			name: "weight",
-			available: false,
+			available: true,
 			icon: <GiWeight size={100} />
 		},
 		{
 			name: "food tracker",
 			available: false,
 			icon: <PiBowlFoodLight size={100} />
+		},
+		{
+			name: "wishlist",
+			available: true,
+			icon: <LiaListOlSolid size={100} />
 		}
 	];
 
+	// Gets the current page to be displayed
 	const getCurrentPage = () => {
 		switch (currentPage) {
 			case "home":
@@ -76,6 +84,8 @@ function App() {
 				return <Weight user={user} />;
 			case "food tracker":
 				return <FoodTracker />;
+			case "wishlist":
+				return <Wishlist />;
 			default:
 				break;
 		}

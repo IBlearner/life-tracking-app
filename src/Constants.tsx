@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export const appsScriptURL: string =
 	"https://script.google.com/macros/s/AKfycbzaqv92fbtfMlaRrmrm_ZB7FFCbzMz0c2TFPOmGMgrvFzEZAsIkJcjdXQbqhZpcyIRE-A/exec";
 
@@ -107,7 +109,7 @@ export interface IDropdownItem {
 export interface IPageDetails {
 	name: string;
 	available: boolean;
-	icon: any;
+	icon: ReactNode;
 }
 
 export interface IGroceryItem {
