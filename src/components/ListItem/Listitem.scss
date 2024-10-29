@@ -7,6 +7,11 @@
 	border: 1px solid white;
 }
 
+.list-item.selected {
+	background-color: white;
+	color: rgb(36, 36, 36);
+}
+
 .list-item-text {
 	grid-column: 3/5;
 	overflow-wrap: break-word;
