@@ -12,10 +12,16 @@ export const Wishlist = () => {
 		{ id: 0, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
 	];
 	const [selected, setSelected] = useState<number>(0);
+	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
 	// Handle when a list item gets selected
 	const handleSelectItem = (index: number) => {
 		setSelected(index);
+	};
+
+	// Toggle between normal and edit mode when a list item gets selected
+	const toggleEditMode = () => {
+		setIsEditMode(!isEditMode);
 	};
 
 	// Get the mapped wishlist
@@ -26,6 +32,7 @@ export const Wishlist = () => {
 					name={elem.name}
 					index={index}
 					isSelected={index === selected}
+					isDeletable={isEditMode}
 					onSelectItem={(e) => handleSelectItem(e)}
 				/>
 			);
@@ -35,6 +42,7 @@ export const Wishlist = () => {
 	return (
 		<div>
 			<h1>wishlist</h1>
+			<button onClick={toggleEditMode}>Edit</button>
 			<div>{getList(mockWishlist)}</div>
 		</div>
 	);

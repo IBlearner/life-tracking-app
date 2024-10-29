@@ -5,6 +5,7 @@ export const Listitem = (props: {
 	name: string;
 	index: number; // Given to this child component so it can then emitted to the parent
 	isSelected: boolean;
+	isDeletable: boolean;
 	onSelectItem: (index: number) => void;
 }) => {
 	return (
@@ -13,9 +14,11 @@ export const Listitem = (props: {
 			onClick={() => props.onSelectItem(props.index)}
 		>
 			<div className="list-item-text">{props.name}</div>
-			<div className="list-item-delete">
-				<FaDeleteLeft size={30} />
-			</div>
+			{props.isDeletable ? (
+				<div className="list-item-delete">
+					<FaDeleteLeft size={30} />
+				</div>
+			) : null}
 		</div>
 	);
 };
