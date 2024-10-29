@@ -1,4 +1,17 @@
 .list-item {
-	border: 1px solid white;
+	min-height: 40px;
 	margin: 5px 0;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+
+	border: 1px solid white;
+}
+
+.list-item-text {
+	grid-column: 3/5;
+	overflow-wrap: break-word;
+}
+
+.list-item-delete {
+	grid-column: 6;
 }

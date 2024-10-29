@@ -8,7 +8,7 @@ export const Wishlist = () => {
 		{ id: 0, name: "fdewrwersfds", createdDate: "now" },
 		{ id: 0, name: "fdewr34sfds", createdDate: "now" },
 		{ id: 0, name: "fd43124sfds", createdDate: "now" },
-		{ id: 0, name: "fde23423234Ssfds", createdDate: "now" }
+		{ id: 0, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
 	];
 
 	// get the mapped wishlist
