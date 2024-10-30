@@ -11,17 +11,40 @@ export const Wishlist = () => {
 		{ id: 0, name: "fd43124sfds", createdDate: "now" },
 		{ id: 0, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
 	];
-	const [selected, setSelected] = useState<number>(0);
+	const [selectedItems, setSelectedItems] = useState<number[]>([999]); // The index of the currently selected item. Setting it as 999 so nothing is selected on inuit
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
 	// Handle when a list item gets selected
 	const handleSelectItem = (index: number) => {
-		setSelected(index);
+		const currentItemAlreadySelected = selectedItems.includes(index);
+		// EDIT MODE If in edit mode we can allow multiple items to be selected at a time
+		if (isEditMode) {
+			// If the current item is already in our list of selected items we want to unselect it
+			if (currentItemAlreadySelected) {
+				const newSelectedItems = selectedItems.filter((elem) => elem !== index);
+				setSelectedItems(newSelectedItems);
+			}
+			// If not we add it
+			else {
+				setSelectedItems([...selectedItems, index]);
+			}
+		}
+		// NORMAL MODE: only one item can be selected at a time
+		else {
+			setSelectedItems(currentItemAlreadySelected ? [] : [index]);
+		}
 	};
 
 	// Toggle between normal and edit mode when a list item gets selected
 	const toggleEditMode = () => {
 		setIsEditMode(!isEditMode);
+	};
+
+	// Delete items that have been selected
+	const deleteItems = () => {
+		// TODO: call to db to delete the items
+
+		console.log("Deleting items!");
 	};
 
 	// Get the mapped wishlist
@@ -31,7 +54,7 @@ export const Wishlist = () => {
 				<Listitem
 					name={elem.name}
 					index={index}
-					isSelected={index === selected}
+					isSelected={selectedItems.includes(index)}
 					isDeletable={isEditMode}
 					onSelectItem={(e) => handleSelectItem(e)}
 				/>
@@ -41,8 +64,9 @@ export const Wishlist = () => {
 
 	return (
 		<div>
-			<h1>wishlist</h1>
+			<h1>Wishlist</h1>
 			<button onClick={toggleEditMode}>Edit</button>
+			<button onClick={deleteItems}>Delete</button>
 			<div>{getList(mockWishlist)}</div>
 		</div>
 	);
