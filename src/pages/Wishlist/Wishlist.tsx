@@ -12,7 +12,7 @@ export const Wishlist = () => {
 		{ id: 123, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
 	];
 	const [data, setData] = useState<IWishlistItem[]>(mockWishlist);
-	const [selectedItems, setSelectedItems] = useState<number[]>([999]); // The index of the currently selected item. Setting it as 999 so nothing is selected on inuit
+	const [selectedItems, setSelectedItems] = useState<number[]>([]); // Array to hold the ID's of all selected items
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
 	// Handle when a list item gets selected
@@ -65,11 +65,15 @@ export const Wishlist = () => {
 		});
 	};
 
+	const shouldShowDeleteButton = (): boolean => {
+		return isEditMode && selectedItems.length > 0;
+	};
+
 	return (
 		<div>
 			<h1>Wishlist</h1>
 			<button onClick={toggleEditMode}>Edit</button>
-			<button onClick={deleteItems}>Delete</button>
+			{shouldShowDeleteButton() ? <button onClick={deleteItems}>Delete</button> : null}
 			<div>{getList(data)}</div>
 		</div>
 	);
