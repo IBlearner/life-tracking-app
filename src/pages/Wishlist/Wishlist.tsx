@@ -5,19 +5,20 @@ import { useState } from "react";
 export const Wishlist = () => {
 	const mockWishlist: IWishlistItem[] = [
 		{ id: 0, name: "fdsfds", createdDate: "now" },
-		{ id: 0, name: "dsf", createdDate: "now" },
-		{ id: 0, name: "fdewrwersfds", createdDate: "now" },
-		{ id: 0, name: "fdewr34sfds", createdDate: "now" },
-		{ id: 0, name: "fd43124sfds", createdDate: "now" },
-		{ id: 0, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
+		{ id: 3, name: "dsf", createdDate: "now" },
+		{ id: 4, name: "fdewrwersfds", createdDate: "now" },
+		{ id: 6, name: "fdewr34sfds", createdDate: "now" },
+		{ id: 99, name: "fd43124sfds", createdDate: "now" },
+		{ id: 123, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
 	];
+	const [data, setData] = useState<IWishlistItem[]>(mockWishlist);
 	const [selectedItems, setSelectedItems] = useState<number[]>([999]); // The index of the currently selected item. Setting it as 999 so nothing is selected on inuit
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
 	// Handle when a list item gets selected
 	const handleSelectItem = (index: number) => {
 		const currentItemAlreadySelected = selectedItems.includes(index);
-		// EDIT MODE If in edit mode we can allow multiple items to be selected at a time
+		// EDIT MODE: If in edit mode we can allow multiple items to be selected at a time
 		if (isEditMode) {
 			// If the current item is already in our list of selected items we want to unselect it
 			if (currentItemAlreadySelected) {
@@ -44,7 +45,9 @@ export const Wishlist = () => {
 	const deleteItems = () => {
 		// TODO: call to db to delete the items
 
-		console.log("Deleting items!");
+		// Create an array with all items to NOT be deleted
+		const remainingItems = data.filter((elem) => !selectedItems.includes(elem.id));
+		setData(remainingItems);
 	};
 
 	// Get the mapped wishlist
@@ -67,7 +70,7 @@ export const Wishlist = () => {
 			<h1>Wishlist</h1>
 			<button onClick={toggleEditMode}>Edit</button>
 			<button onClick={deleteItems}>Delete</button>
-			<div>{getList(mockWishlist)}</div>
+			<div>{getList(data)}</div>
 		</div>
 	);
 };
