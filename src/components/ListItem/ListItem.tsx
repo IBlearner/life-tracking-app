@@ -3,7 +3,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 
 export const Listitem = (props: {
 	name: string;
-	index: number; // Given to this child component so it can then emitted to the parent
+	id: number; // Given to this child component so it can then emitted to the parent
 	isSelected: boolean;
 	isDeletable: boolean;
 	onSelectItem: (index: number) => void;
@@ -11,7 +11,7 @@ export const Listitem = (props: {
 	return (
 		<div
 			className={"list-item" + `${props.isSelected ? " selected" : ""}`}
-			onClick={() => props.onSelectItem(props.index)}
+			onClick={() => props.onSelectItem(props.id)}
 		>
 			<div className="list-item-text">{props.name}</div>
 			{props.isDeletable ? (

@@ -52,12 +52,12 @@ export const Wishlist = () => {
 
 	// Get the mapped wishlist
 	const getList = (items: IWishlistItem[]) => {
-		return items.map((elem: IWishlistItem, index: number) => {
+		return items.map((elem: IWishlistItem) => {
 			return (
 				<Listitem
 					name={elem.name}
-					index={index}
-					isSelected={selectedItems.includes(index)}
+					id={elem.id}
+					isSelected={selectedItems.includes(elem.id)}
 					isDeletable={isEditMode}
 					onSelectItem={(e) => handleSelectItem(e)}
 				/>
