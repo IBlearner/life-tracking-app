@@ -1,6 +1,7 @@
 import { IWishlistItem } from "../../Interfaces";
 import { Listitem } from "../../components/ListItem/ListItem";
 import { useState } from "react";
+import { text } from "../../Constants";
 
 export const Wishlist = () => {
 	const mockWishlist: IWishlistItem[] = [
@@ -60,8 +61,13 @@ export const Wishlist = () => {
 		// TODO: call to db to delete the items
 
 		// Create an array with all items to NOT be deleted
-		const remainingItems = data.filter((elem) => !selectedItems.includes(elem.id));
-		setData(remainingItems);
+		const confirmDeleteSelection = window.confirm(
+			selectedItems.length > 1 ? text.wishlist.confirmDeleteItems : text.wishlist.confirmDeleteItem
+		);
+		if (confirmDeleteSelection) {
+			const remainingItems = data.filter((elem) => !selectedItems.includes(elem.id));
+			setData(remainingItems);
+		}
 	};
 
 	// Secondary text to give to the ListItem component

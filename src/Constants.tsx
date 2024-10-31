@@ -16,6 +16,10 @@ export const text = {
 		wasteViewMoreLink:
 			"https://www.brisbane.qld.gov.au/clean-and-green/rubbish-tips-and-bins/rubbish-bins/bin-items",
 		kerbsideInaccurateMessage: "Kerbside collection date is based off the previous year's data."
+	},
+	wishlist: {
+		confirmDeleteItem: "Are you sure you want to delete this item?",
+		confirmDeleteItems: "Are you sure you want to delete these items?"
 	}
 };
 
