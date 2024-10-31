@@ -4,19 +4,33 @@ import { useState } from "react";
 
 export const Wishlist = () => {
 	const mockWishlist: IWishlistItem[] = [
-		{ id: 0, name: "fdsfds", createdDate: "now" },
-		{ id: 3, name: "dsf", createdDate: "now" },
-		{ id: 4, name: "fdewrwersfds", createdDate: "now" },
-		{ id: 6, name: "fdewr34sfds", createdDate: "now" },
-		{ id: 99, name: "fd43124sfds", createdDate: "now" },
-		{ id: 123, name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", createdDate: "now" }
+		{
+			id: 0,
+			name: "fdsfds",
+			createdDate: "now",
+			price: "1231.95",
+			priority: 1,
+			location: "bunnings bunnings bunnings bunnings bunnings bunnings bunnings bunnings"
+		},
+		{ id: 3, name: "dsf", createdDate: "now", price: "65.30", priority: 5, location: "kmart" },
+		{ id: 4, name: "fdewrwersfds", createdDate: "now", price: "10", priority: 6, location: "amazon" },
+		{ id: 6, name: "fdewr34sfds", createdDate: "now", price: "1000.15", priority: 4, location: "big w" },
+		{ id: 99, name: "fd43124sfds", createdDate: "now", price: "13", priority: 2, location: "coles" },
+		{
+			id: 123,
+			name: "fde23423234Ssfdseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			createdDate: "now",
+			price: "33",
+			priority: 3,
+			location: "online"
+		}
 	];
 	const [data, setData] = useState<IWishlistItem[]>(mockWishlist);
 	const [selectedItems, setSelectedItems] = useState<number[]>([]); // Array to hold the ID's of all selected items
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
 	// Handle when a list item gets selected
-	const handleSelectItem = (index: number) => {
+	const handleSelectItem = (index: number): void => {
 		const currentItemAlreadySelected = selectedItems.includes(index);
 		// EDIT MODE: If in edit mode we can allow multiple items to be selected at a time
 		if (isEditMode) {
@@ -37,12 +51,12 @@ export const Wishlist = () => {
 	};
 
 	// Toggle between normal and edit mode when a list item gets selected
-	const toggleEditMode = () => {
+	const toggleEditMode = (): void => {
 		setIsEditMode(!isEditMode);
 	};
 
 	// Delete items that have been selected
-	const deleteItems = () => {
+	const deleteItems = (): void => {
 		// TODO: call to db to delete the items
 
 		// Create an array with all items to NOT be deleted
@@ -50,12 +64,17 @@ export const Wishlist = () => {
 		setData(remainingItems);
 	};
 
+	const getListSecondaryText = (price: string, location: string): string => {
+		return `$${price} - ${location}`;
+	};
+
 	// Get the mapped wishlist
 	const getList = (items: IWishlistItem[]) => {
 		return items.map((elem: IWishlistItem) => {
 			return (
 				<Listitem
-					name={elem.name}
+					primary={elem.name}
+					secondary={getListSecondaryText(elem.price, elem.location)}
 					id={elem.id}
 					isSelected={selectedItems.includes(elem.id)}
 					showRadio={isEditMode}

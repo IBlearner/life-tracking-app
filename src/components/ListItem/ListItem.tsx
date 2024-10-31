@@ -5,7 +5,8 @@ import { FaRegCircle } from "react-icons/fa";
 import { FaRegDotCircle } from "react-icons/fa";
 
 export const Listitem = (props: {
-	name: string;
+	primary: string;
+	secondary?: string; // Text underneath the title
 	id: number; // Given to this child component so it can then emitted to the parent
 	isSelected: boolean; // If the current item is selected
 	showRadio: boolean; // Basically is edit mode
@@ -29,8 +30,8 @@ export const Listitem = (props: {
 					</div>
 				)
 			) : null}
-
-			<div className="list-item-text">{props.name}</div>
+			<div className="list-item-primary">{props.primary}</div>
+			{props.secondary ? <div className="list-item-secondary">{props.secondary}</div> : null}
 		</div>
 	);
 };

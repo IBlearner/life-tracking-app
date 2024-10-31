@@ -56,4 +56,8 @@ export interface IChecklistItem extends IListItem {
 	completedDate?: string; // TODO: Make this a Date type?
 }
 
-export interface IWishlistItem extends IListItem {}
+export interface IWishlistItem extends IListItem {
+	priority: number;
+	price: string; // Making this a string to accomodate float values
+	location: string;
+}
