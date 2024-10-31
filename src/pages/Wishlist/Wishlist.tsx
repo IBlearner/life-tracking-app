@@ -64,8 +64,9 @@ export const Wishlist = () => {
 		setData(remainingItems);
 	};
 
+	// Secondary text to give to the ListItem component
 	const getListSecondaryText = (price: string, location: string): string => {
-		return `$${price} - ${location}`;
+		return `$${price} - ${location[0].toUpperCase() + location.slice(1)}`;
 	};
 
 	// Get the mapped wishlist
