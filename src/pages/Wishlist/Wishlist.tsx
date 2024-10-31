@@ -58,7 +58,7 @@ export const Wishlist = () => {
 					name={elem.name}
 					id={elem.id}
 					isSelected={selectedItems.includes(elem.id)}
-					isDeletable={isEditMode}
+					showRadio={isEditMode}
 					onSelectItem={(e) => handleSelectItem(e)}
 				/>
 			);
