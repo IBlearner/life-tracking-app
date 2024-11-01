@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Listitem.scss";
+import "./ListItem.scss";
 
 // Icon imports
 import { FaRegCircle } from "react-icons/fa";
