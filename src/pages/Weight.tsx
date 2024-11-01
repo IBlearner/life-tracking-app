@@ -1,7 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Calender } from "../components/Calender/Calender";
-import { appsScriptURL, IDateWeightItem, IUserDetails, months } from "../Constants";
-import { parseISO, format, isValid, toDate } from "date-fns";
+import { months } from "../Constants";
+import { IDateWeightItem, IUserDetails } from "../Interfaces";
+import { format, toDate } from "date-fns";
 import "./Weight.scss";
 import CircularProgress from "@mui/material/CircularProgress";
 import supabase from "../configs/supabaseClient";
@@ -56,7 +57,7 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 				const mappedData = data.map((elem) => {
 					return {
 						id: elem.user_id,
-						date: elem.date,
+						date: toDate(elem.date),
 						weight: elem.weight,
 						notes: elem.notes
 					} as IDateWeightItem;
@@ -105,7 +106,7 @@ export const Weight = (props: { user: IUserDetails | null }) => {
 
 			const { data, error, status, statusText } = await supabase
 				.from("Weight data")
-				.insert({ date: chosenDate, weight: weight, notes: notes, user_id: props.user?.id })
+				.insert({ date: chosenDate.toDateString(), weight: weight, notes: notes, user_id: props.user?.id })
 				.select();
 
 			if (error) throw error;
