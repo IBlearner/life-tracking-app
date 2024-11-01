@@ -1,4 +1,4 @@
-import { IDropdownItem } from "../../Constants";
+import { IDropdownItem } from "../../Interfaces";
 
 export const Dropdown = (props: {
 	// Unique identifier

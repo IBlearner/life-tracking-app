@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { IDropdownItem, IGroceryItem } from "../Constants";
+import { IDropdownItem, IGroceryItem } from "../Interfaces";
 import { Dropdown } from "../components/Dropdown/Dropdown";
 
 export const Groceries = () => {
@@ -33,35 +33,40 @@ export const Groceries = () => {
 			name: "peanuts",
 			quantity: 2,
 			measurement: "bag",
-			isCommonGood: false
+			isCommonGood: false,
+			createdDate: Date.now().toString()
 		},
 		{
 			id: 1,
 			name: "eggs",
 			quantity: 24,
 			measurement: "piece",
-			isCommonGood: false
+			isCommonGood: false,
+			createdDate: Date.now().toString()
 		},
 		{
 			id: 2,
 			name: "chicken",
 			quantity: 200,
 			measurement: "gram",
-			isCommonGood: false
+			isCommonGood: false,
+			createdDate: Date.now().toString()
 		},
 		{
 			id: 3,
 			name: "milk",
 			quantity: 1,
 			measurement: "bottle",
-			isCommonGood: false
+			isCommonGood: false,
+			createdDate: Date.now().toString()
 		},
 		{
 			id: 4,
 			name: "icecream",
 			quantity: 2,
 			measurement: "litre",
-			isCommonGood: false
+			isCommonGood: false,
+			createdDate: Date.now().toString()
 		}
 	];
 

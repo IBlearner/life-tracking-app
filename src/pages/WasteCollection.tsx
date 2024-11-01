@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict, add, isBefore, parse, format } from "date-fns";
 import "./WasteCollection.scss";
-import { IWasteCollectionItem, IKerbsideCollectionItem, text } from "../Constants";
+import { text } from "../Constants";
+import { IWasteCollectionItem, IKerbsideCollectionItem } from "../Interfaces";
 
 // Icon imports
 import { RiRecycleFill } from "react-icons/ri";

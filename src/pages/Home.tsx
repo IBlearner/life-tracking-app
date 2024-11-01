@@ -1,4 +1,4 @@
-import { IPageDetails, IUserDetails } from "../Constants";
+import { IPageDetails, IUserDetails } from "../Interfaces";
 import "./Home.scss";
 
 export const Home = ({
