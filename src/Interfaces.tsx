@@ -4,6 +4,12 @@ export interface IListItem {
 	id: number;
 	name: string;
 	createdDate: string; // TODO: Make this a Date type?
+	options?: IListItemOption;
+}
+
+export interface IListItemOption {
+	text: string;
+	action: () => void;
 }
 
 export interface IMonths {

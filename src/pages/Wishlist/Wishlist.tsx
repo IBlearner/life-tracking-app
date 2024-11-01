@@ -1,4 +1,4 @@
-import { IWishlistItem } from "../../Interfaces";
+import { IListItemOption, IWishlistItem } from "../../Interfaces";
 import { Listitem } from "../../components/ListItem/ListItem";
 import { useState } from "react";
 import { text } from "../../Constants";
@@ -24,6 +24,16 @@ export const Wishlist = () => {
 			price: "33",
 			priority: 3,
 			location: "online"
+		}
+	];
+	const itemOptions: IListItemOption[] = [
+		{
+			text: "Update",
+			action: () => console.log(mockWishlist)
+		},
+		{
+			text: "Delete",
+			action: () => console.log(mockWishlist)
 		}
 	];
 	const [data, setData] = useState<IWishlistItem[]>(mockWishlist);
@@ -85,6 +95,7 @@ export const Wishlist = () => {
 					id={elem.id}
 					isSelected={selectedItems.includes(elem.id)}
 					showRadio={isEditMode}
+					options={itemOptions}
 					onSelectItem={(e) => handleSelectItem(e)}
 				/>
 			);
@@ -98,7 +109,7 @@ export const Wishlist = () => {
 	return (
 		<div>
 			<h1>Wishlist</h1>
-			<button onClick={toggleEditMode}>Edit</button>
+			<button onClick={toggleEditMode}>Select</button>
 			{shouldShowDeleteButton() ? <button onClick={deleteItems}>Delete</button> : null}
 			<div>{getList(data)}</div>
 		</div>

@@ -5,8 +5,7 @@
 	grid-template-columns: repeat(5, 1fr);
 	grid-template-rows: repeat(2, auto);
 	align-items: center;
-	justify-items: start;
-	padding: 12px;
+	padding: 12px 0;
 
 	border: 2px solid rgb(255, 255, 255, 0.3);
 }
@@ -35,6 +34,31 @@
 	overflow-wrap: break-word;
 	box-sizing: border-box;
 	text-align: left;
+}
+
+.list-item-options-selector {
+	display: flex;
+	flex-direction: row-reverse;
+	height: 100%;
+	position: relative;
+
+	text-align: right;
+
+	> svg {
+		padding: 0 15px 15px 15px;
+	}
+}
+
+.list-item-options-box {
+	position: absolute;
+	top: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	border: 1px solid red;
+	background-color: rgb(255, 255, 255, 0.3);
 }
 
 .list-item-radio {
